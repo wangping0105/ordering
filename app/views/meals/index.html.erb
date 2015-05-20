@@ -1,0 +1,37 @@
+<table border="1" width="400">
+  <tr>
+    <td>菜名</td><td>单价</td>
+  </tr>
+  <%  @meals.each do |t,meals|%>
+    <tr>
+      <td colspan="4">
+        <font color="red"><%=t%>系列</font>
+        <span class = 'add_meals_type'><%=link_to '新增菜品', new_meal_path , remote: true %></span>
+      </td>
+    </tr>
+    <% meals.each do |meal| %>
+      <tr>
+          <td><%=meal.name%><%= '+米饭' if meal.mtype=='炒菜'%></td>
+          <td><%=meal.price%>元</td>
+      </tr>
+    <%end%>
+  <%end%>
+</table>
+<div id="new_meal_type">
+  <%= form_for Meal.new do|f| %>
+    <ul>
+      <li>
+        类型：<%=f.select :name,@arr %>
+      </li>
+      <li>
+        菜名：<%=f.text_field :name %>
+      </li>
+      <li>
+        单价：<%=f.text_field :price %>
+      </li>
+      <li>
+        <%=f.submit '提交' %>
+      </li>
+    </ul>
+  <%end  %>
+</div>

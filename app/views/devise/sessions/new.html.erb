@@ -1,0 +1,23 @@
+<div class="login_info">
+  <h2 style="text-align: center;">登录订餐系统</h2>
+
+  <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+
+    <div >
+      <%= f.label :email,class:"cf" %>
+        <%= f.email_field :email, :autofocus => true %>
+      </div>
+
+      <div>
+        <%= f.label :password ,class:"cf"%>
+          <%= f.password_field :password %>
+        </div>
+        <% if devise_mapping.rememberable? -%>
+          <div class="cf" ><%= f.check_box :remember_me ,style:'margin-left:20px;float:left'%><%= f.label '记住我' %></div>
+        <% end -%>
+
+        <div><%= f.submit "登陆" %></div>
+      <% end %>
+
+      <%= render "devise/shared/links" %>
+    </div>

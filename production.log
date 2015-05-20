@@ -1,0 +1,64 @@
+Connecting to database specified by database.yml
+
+
+Started GET "/sites/static?path_name=/decathloncbd/ggl.html&secret_key=oFoDgjnkKtJ2tfheJ7kWIx-GzeKo" for 116.255.202.113 at 2014-02-08 09:54:10 +0800
+Processing by PagesController#static as HTML
+  Parameters: {"path_name"=>"/decathloncbd/ggl.html", "secret_key"=>"oFoDgjnkKtJ2tfheJ7kWIx-GzeKo"}
+Redirected to http://web.sunworldmedia.com/allsites/decathloncbd/ggl.html?secret_key=oFoDgjnkKtJ2tfheJ7kWIx-GzeKo
+Completed 302 Found in 169ms (ActiveRecord: 5.0ms)
+
+
+Started GET "/check_if_watch?secret_token=oFoDgjnkKtJ2tfheJ7kWIx-GzeKo" for 116.255.202.113 at 2014-02-08 09:54:12 +0800
+Processing by AwardsController#check_if_watch as TEXT
+  Parameters: {"secret_token"=>"oFoDgjnkKtJ2tfheJ7kWIx-GzeKo"}
+  Rendered text template (0.0ms)
+Completed 200 OK in 83ms (Views: 66.4ms | ActiveRecord: 2.9ms)
+Connecting to database specified by database.yml
+
+
+Started POST "/api/clients/message_detail" for 116.255.202.113 at 2014-02-08 09:54:16 +0800
+Processing by Api::ClientsController#message_detail as HTML
+  Parameters: {"person_id"=>"2", "site_id"=>"48", "page"=>"1", "user_id"=>"1"}
+WARNING: Can't verify CSRF token authenticity
+Completed 200 OK in 219ms (Views: 3.4ms | ActiveRecord: 40.4ms)
+
+
+Started GET "/" for 116.255.202.113 at 2014-02-08 09:54:16 +0800
+Processing by Devise::SessionsController#new as */*
+  Rendered devise/sessions/new.html.erb within layouts/application (53.5ms)
+  Rendered shared/_tishi_alert.html.erb (0.4ms)
+Completed 200 OK in 124ms (Views: 105.3ms | ActiveRecord: 1.1ms)
+
+
+Started POST "/api/clients/message_detail" for 116.255.202.113 at 2014-02-08 09:54:20 +0800
+Processing by Api::ClientsController#message_detail as HTML
+  Parameters: {"person_id"=>"7", "site_id"=>"48", "page"=>"1", "user_id"=>"1"}
+WARNING: Can't verify CSRF token authenticity
+Completed 200 OK in 37ms (Views: 3.1ms | ActiveRecord: 18.8ms)
+
+
+Started POST "/api/clients/message_detail" for 116.255.202.113 at 2014-02-08 09:54:31 +0800
+Processing by Api::ClientsController#message_detail as HTML
+  Parameters: {"person_id"=>"6", "site_id"=>"48", "page"=>"1", "user_id"=>"1"}
+WARNING: Can't verify CSRF token authenticity
+Completed 200 OK in 7ms (Views: 2.7ms | ActiveRecord: 1.2ms)
+
+
+Started GET "/get_token" for 116.255.202.113 at 2014-02-08 09:54:42 +0800
+Processing by PagesController#get_token as TEXT
+  Rendered text template (0.0ms)
+Completed 200 OK in 70ms (Views: 64.9ms | ActiveRecord: 1.3ms)
+
+
+Started POST "/sites/48/app_managements/get_form_date" for 116.255.202.113 at 2014-02-08 09:55:04 +0800
+Processing by AppManagementsController#get_form_date as TEXT
+  Parameters: {"form "=>" utf8=✓", "authenticity_token"=>"tWoAoyoHiHKjvwLDDLtrR/GCZm6SHXtnH/PNslK228U=", "form"=>{"t0"=>{"name"=>"姓名", "value"=>"去人事"}, "t1"=>{"name"=>"手机号码", "value"=>"25775"}, "t2"=>{"name"=>"年龄", "value"=>"44"}, "t3"=>{"name"=>"性别", "value"=>"5585"}, "r4"=>{"name"=>"爱好", "value"=>"通杀"}}, "username"=>"去人事", "phone"=>"25775", "open_id"=>"osVdtuCyVqbCCSKbmR3ZaKCp5p6E", "site_id"=>"48"}
+  Rendered text template (0.0ms)
+Completed 200 OK in 5ms (Views: 1.1ms | ActiveRecord: 0.4ms)
+
+
+Started POST "/sites/48/app_managements/get_form_date" for 116.255.202.113 at 2014-02-08 09:55:07 +0800
+Processing by AppManagementsController#get_form_date as TEXT
+  Parameters: {"form "=>" utf8=✓", "authenticity_token"=>"yFVip05wFrbSqc9eYuglSTxx8EmYw+RaPWO3McE8Vmk=", "form"=>{"t0"=>{"name"=>"姓名", "value"=>"陆平333"}, "t1"=>{"name"=>"手机号码", "value"=>"18551109693"}, "t2"=>{"name"=>"年龄", "value"=>"27"}, "t3"=>{"name"=>"性别", "value"=>"男"}, "r4"=>{"name"=>"爱好", "value"=>"通杀"}}, "username"=>"陆平333", "phone"=>"18551109693", "open_id"=>"osVdtuMxH3BQ4Jw4ewH31xCOpQ0k", "from"=>"message", "isappinstalled"=>"0", "site_id"=>"48"}
+  Rendered text template (0.0ms)
+Completed 200 OK in 34ms (Views: 0.4ms | ActiveRecord: 30.2ms)

@@ -1,0 +1,24 @@
+<div class="login_info">
+  <h2 style="text-align: center;">登录订餐系统</h2>
+     <%=form_for(@user) do |f|%>
+        <div>
+        你的名字：
+        <%=f.text_field :uname,id:'uname'%>
+        </div>
+        <div>
+          <input type="button" value="登陆" onclick="check_login(this)" />
+        </div>
+      <% end %>
+    </div>
+<script>
+
+function check_login(button){
+    var uname=$("#uname").val();
+    if($.trim(uname)==""){
+        alert('请输入名字');
+        return false;
+    }
+    $(button).parent().parent().submit();
+}
+
+</script>

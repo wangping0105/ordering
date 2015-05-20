@@ -1,0 +1,68 @@
+<div style="float: left;padding: 20px;width: 40%;  ">
+  <h1>订单</h1>
+
+  <%total=0 %>
+  <%arr=[]  %>
+  <table border="1" width="400">
+    <tr>
+      <td>菜名</td><td>单价</td><td>数量</td><td>小计</td> 
+    </tr>
+    <%  @meals.each do |meal,orders|%>
+     <% orders =do_about orders %>
+      <tr>
+        <td colspan="5"><font color="red"><%=meal%>系列 </font></td>
+      </tr>
+     
+      <% orders.each do |order| %>
+        <tr>
+          <td><%=order.name%></td><td><%=order.price%></td><td><%=order.num%></td><td><%=order.Subtotal=order.num*order.price%><%total+=order.Subtotal%>元</td>
+        </tr>
+      <%end%>
+    <%end%>
+    <tr>
+      <td>总计：</td><td colspan="4"><%=total%>元 
+        <% if current_order_user.role==1 %>
+          <%=link_to '付款',paying_path%>
+          <%if @shop.status%>
+            <%=link_to '结束',open_path%>
+          <%else%>
+            <%=link_to '开始',open_path%>
+          <%end%>
+        <%end%>
+      </td>
+    </tr>
+  </table>
+</div>
+<div style="float:left;padding: 20px;">
+  <h3>各人的订单明细(<%=@meals_by_person.length%>人)</h3>
+
+  <% @meals_by_person.each do|id,meal_by_person| %>
+    用户：<%=id%> 状态：
+    <% meal_by_person =do_about meal_by_person %>
+    <%total=0 %>
+    <%if meal_by_person[0].status==0%>
+    <font color="red">未付款</font>
+      <%if current_order_user.uname=='wangping'%>
+        <%=link_to '付款',pay_order_user_path(id)%>
+      <%end%>
+    <%else%>
+      已付款
+    <%end%>
+    <table border="1" width="400">
+      <tr>
+        <td>菜名</td><td>单价</td><td>数量</td><td>小计</td>
+      </tr>
+      
+      <%  meal_by_person.each do |order1|%>
+        
+        <tr>
+          <td><%=order1.name%></td><td><%=order1.price%></td><td><%=order1.num%></td>
+          <td><%=order1.Subtotal=order1.num*order1.price%><%total+=order1.Subtotal%>元</td>
+        </tr>
+      <%end%>
+      <tr>
+        <td>总计：</td><td colspan="4"><%=total%>元</td>
+      </tr>
+    </table>
+  <%end%>
+</div>
