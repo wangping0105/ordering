@@ -1,5 +1,5 @@
 class OrderUser < ActiveRecord::Base
-  has_many :orders
+  has_many :orders, foreign_key: :user_id
 
 
   def admin?

@@ -37,7 +37,20 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-
+gem 'dragonfly', '~> 1.0.10'
+#gem 'ruby-audio' ,source: "http://gemcutter.org"
+gem 'speech2text'
+group :development do
+  gem 'pry-rails'
+  gem 'pry-remote'
+  gem 'pry-nav'
+  # gem 'debugger'
+  gem 'thin'
+  gem "quiet_assets"
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'rack-mini-profiler', require: false
+end
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

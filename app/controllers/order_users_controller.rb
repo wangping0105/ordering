@@ -2,7 +2,12 @@ class OrderUsersController < ApplicationController
   
   layout 'user'
   def index
+    require 'speech'
     @user=OrderUser.new
+
+    # audio = Speech::AudioToText.new("/home/wangping/Downloads/test1.mp3")
+    # binding.pry
+    # p audio.to_text
   end
   def create
     @user1=OrderUser.find_by(uname:params[:order_user][:uname])
@@ -27,4 +32,6 @@ class OrderUsersController < ApplicationController
 
    redirect_to orders_path
   end
+
+
 end

@@ -2,21 +2,20 @@
 class OrdersController < ApplicationController
   #before_filter :authenticate_user!
   def index
-    @orders =Order.find_by_sql('select o.id,m.name,m.price,o.num,o.Subtotal,m.mtype,u.uname,u.status from orders o inner join meals m on m.id=o.meal_id inner join order_users u on u.id=o.user_id')
-    @meals=@orders.group_by{|r| r[:mtype] }
-    @orders1 =Order.find_by_sql('select o.id,m.name,m.price,o.num,o.Subtotal,m.mtype,u.uname,u.status from orders o inner join meals m on m.id=o.meal_id inner join order_users u on u.id=o.user_id')
-    @meals_by_person1 =@orders1.group_by{|s| s[:uname] }
-    @meals_by_person =Array.new
-    @meals_by_person = @meals_by_person1
+    @orders = Order.includes([:order_user, meal: :meal_type] )
+    @meals = Meal.where(id:@orders.map(&:meal_id).uniq)
+    @meal_types = MealType.where(id: @meals.map(&:mtype).uniq)
+    # @meal_types_arr = @meal_types.map{|m| [m.id,m.name]}.to_h
+    # @meals_arr = @meals.map{|m| [m.id,m.name]}.to_h
+    @orders_groups = @orders.group_by{|r| r[:meal_id] }
+    @orders_users_groups = @orders.group_by{|r| r[:user_id] }
+    # binding.pry
     @shop=Shop.first
   end
   def new
+   @meal_types = MealType.includes(:meals)
    @shop=Shop.first
-   @orders =Order.find_by_sql("select o.id,m.name,m.price,o.num,o.Subtotal,m.mtype,u.uname from orders o inner join meals m on m.id=o.meal_id inner join order_users u on u.id=o.user_id where u.id=#{current_order_user.id}")
-   @meals=@orders.group_by{|r| r[:mtype] }
-
-   meals =Meal.all
-   @meals_g=meals.group_by{|m| m.mtype}
+   @orders = current_order_user.orders.includes(:meal)
   end
   def create
     @order  =Order.new(order_params)

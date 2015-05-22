@@ -5,3 +5,9 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+types = %w[米饭 套餐 盖浇饭]
+MealType.delete_all
+types.each do |t|
+  MealType.create(name: t)
+end

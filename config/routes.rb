@@ -1,5 +1,4 @@
 Ordering::Application.routes.draw do
-  get 'meals/index'
 
   devise_for :users
   resources :order_users do

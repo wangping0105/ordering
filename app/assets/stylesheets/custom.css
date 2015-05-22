@@ -26,3 +26,9 @@ body{
     float: right;
     margin-right: 2px;
 }
+.new_meal{
+    position: absolute;
+    left: 500px;
+    top: 56px;
+    width: 400px;
+}
