@@ -6,8 +6,12 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-types = %w[米饭 套餐 盖浇饭]
+
+shop = Shop.create(sname:'default')
+types = %w[套餐]
 MealType.delete_all
 types.each do |t|
-  MealType.create(name: t)
+  MealType.create(name: t, store_id: shop.id)
 end
+OrderUser.create(uname: 'wangping', role: 1, status: 0)
+p 'have inited'
