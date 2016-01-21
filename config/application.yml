@@ -1,0 +1,15 @@
+# 这里放第三方应用的配置数据
+default: &default
+  yuntongxun_app_id: 8a48b5514f1702fd014f209720ee0cdf
+  yuntongxun_account_sid: 8a48b5514c9d9c05014cb082d4c70bc1
+  yuntongxun_auth_token: 1feab6f26e2b455abbab4c03e7ce9712
+  yuntongxun_host: https://sandboxapp.cloopen.com:8883
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+  server_name: production
+  yuntongxun_host: https://app.cloopen.com:8883
+  redis_host: 121.42.157.241

@@ -6,8 +6,11 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-types = %w[米饭 套餐 盖浇饭]
+types = %w[默认店]
 MealType.delete_all
 types.each do |t|
   MealType.create(name: t)
 end
+
+
+Shop.create(sname:'默认饭馆', status:1)

@@ -1,39 +1,55 @@
-<table border="1" width="400">
-  <tr>
-    <td>菜名</td><td>单价</td><td>操作</td>
-  </tr>
-  <%  @meal_types.each do |meal_type|%>
-    <tr>
-      <td colspan="4">
-        <font color="red"><%=meal_type.name%>系列</font>
-        <span class = 'add_meals_type'></span>
-      </td>
-    </tr>
-    <% meal_type.meals.each do |meal| %>
-      <tr>
-          <td><%=meal.name%><%= '+米饭' if meal.mtype=='炒菜'%></td>
-          <td><%=meal.price%>元</td>
-          <td><%=link_to '删除', meal_path(meal), method: :DELETE, 'data-confirm'=>'是否删除？'%></td>
-      </tr>
-    <%end%>
-  <%end%>
-</table>
-<div id="new_meal_type" class = 'new_meal'>
-  <h3>新增菜品</h3>
-  <%= form_for Meal.new,html:{class:""} do|f| %>
-    <ul>
-      <li>
-        类型：<%=f.select :mtype, @meal_types.map{|a| [a.name, a.id]} %>
-      </li>
-      <li>
-        菜名：<%=f.text_field :name %>
-      </li>
-      <li>
-        单价：<%=f.text_field :price %>
-      </li>
-      <li>
-        <%=f.submit '新增' %>
-      </li>
-    </ul>
-  <%end  %>
+<div class="mian_body">
+  <div class="div1">
+    <div class="whidth_100">
+    <%= form_for MealType.new ,url:change_meal_type_meal_types_path, html:{class:""} do|f| %>
+        <h1>本次选择饭店：<%= @meal_type.try(:name)||"还未选择" %></h1>
+        饭店选择：
+        <%=f.select :id do %>
+          <% options_for_select(@all_meal_types.map{|a| [a.name, a.id]},params[:meal_type_id])  %>
+        <% end %>
+        <%= f.submit '选择此饭馆', class:"btn-primary btn" %>
+    <% end %>
+    </div>
+    <div>
+      <div id="new_meal_type" class ='new_meal'>
+        <%= render 'meal_list' %>
+      </div>
+      <div id="new_meal_type" class ='new_meal'>
+        <%= render 'new_model' %>
+      </div>
+
+      <div id="new_meal_style" class= 'new_meal'>
+        <h3>新增店名</h3>
+        <%= form_for MealType.new,html:{class:""} do|f| %>
+          <input type="hidden" name="meal_type_id" value="<%= params[:meal_type_id] %>" />
+            <ul>
+              <li>
+                店名：<%=f.text_field :name, required:true %>
+              </li>
+              <li>
+                <%=f.submit '新增', class:"btn-primary btn" %>
+              </li>
+            </ul>
+        <%end  %>
+        <div>
+          <h4>已有饭店：</h4>
+          <ul>
+            <%= MealType.find_each do |mt| %>
+                <li>
+                  <span class="style_name"><%= mt.name %> </span> <%= link_to '删除', meal_type_path(mt.id), method: :delete, class:"btn btn-danger", data:{ confirm:"确认删除？" } %>
+                </li>
+            <%end %>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </div>
+<script>
+  $(function(){
+    $("#meal_type_id").on("change",function(){
+      location.href = "/meals?meal_type_id="+$(this).val();
+    });
+  })
+</script>

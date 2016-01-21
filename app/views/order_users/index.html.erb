@@ -1,15 +1,21 @@
-<div class="login_info">
+<div class="login_info" style="padding-top: 200px;">
   <h2 style="text-align: center;">登录订餐系统</h2>
      <%=form_for(@user) do |f|%>
-        <div>
+        <div style="text-align: center;
+                padding: 10px;
+        ">
         你的名字：
         <%=f.text_field :uname,id:'uname'%>
         </div>
-        <div>
+        <div  style="text-align: center;
+                padding: 10px;
+        ">
           <input type="button" value="登陆" onclick="check_login(this)" />
         </div>
       <% end %>
     </div>
+
+
 <script>
 
 function check_login(button){

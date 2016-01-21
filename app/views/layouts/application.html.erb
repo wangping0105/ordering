@@ -1,33 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  <meta content="max-age=0" http-equiv="Cache-Control">
+  <meta content="no-cache" http-equiv="pragma">
+  <meta content="0" http-equiv="Expires">
+  <meta content="initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" name="viewport">
+  <meta content="telephone=no" name="format-detection">
+  <meta content="王平的订饭系统" name="keywords">
+  <meta content="王平的订饭系统：http://test.dc.ikcrm.com/" name="description">
+  <meta content="2015-08-19" name="publishdate">
+  <meta content="王平" name="author">
+
   <title>Ordering</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 </head>
+
 <body <%="data-no-turbolink" if request.get? %>>
 
-  <div>
-    <div class="user_info">
-      欢迎您：<%=current_order_user.uname%>
+    <div class="mian_body">
+      <%= render 'shared/flash_area' %>
+      <%= render 'shared/body_head' %>
     </div>
-    <div>
-      <ul>
-        <li><%=link_to '订单首页', orders_path ,class: 'all_orders' %></li>
-        <li><%=link_to '我要订饭', new_order_path ,class: 'my_orders' %></li>
-        <% if current_order_user.admin? %>
-          <li> <%=link_to '管理饭菜', meals_path  %></li>
-        <%end %>
-        <li> <%=link_to '退出', destroy_user_session_path ,method: :destroy %></li>
-      </ul>
-    </div>
-
-
-
-  </div>
- 
-<%= yield %>
-
+    <%= yield %>
 </body>
 </html>
+
+
+<script>
+$(function (){
+    $("[data-toggle='popover_image']").on("click", function(){
+        var str = '<div class="custome_popover_div"><div class="custome_popover" role="tooltip" ><div class="float-r margin-10 arrow">X</div><h3 class="popover-title"></h3><div class="popover-content"><img src="'+$(this).find("img").attr("src")+'" /></div></div>' +
+                '</div>'
+        $("body").append(str);
+        $(".custome_popover").on("click", function(){
+            $(this).parent().remove();
+        })
+    })
+
+//
+//
+//
+//    $("[data-toggle='popover']").popover({
+//        trigger: "manual",
+//        title: '查看大图',
+//        html: true,
+//        content: '<img src="'+$(this).attr("src")+'" />',
+//        template: '<div class="popover w-200px" role="tooltip" ><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+//    }).on("mouseenter", function(evt) {
+//        var timeoutId, _this;
+//        $('[data-toggle="popover"]').not(this).popover('hide');
+//        _this = this;
+//        return timeoutId = setTimeout( function() {
+//            $(_this).popover('show');
+//            return $(".popover").on("mouseleave", function() {
+//                return $(_this).popover('hide');
+//            });
+//        },20);
+//    }).on("mouseleave", function() {
+//        var timeoutId, _this;
+//        var _this;
+//        _this = this;
+//        clearTimeout(timeoutId);
+//        return setTimeout(function() {
+//            if (!$(".popover:hover").length) {
+//                return $(_this).popover("hide");
+//            }
+//        },50);
+//    });
+});
+</script>

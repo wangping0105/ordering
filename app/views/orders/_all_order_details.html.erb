@@ -1,0 +1,29 @@
+<h3>成员订单明细(<%=@orders_users_groups.length%>人)</h3>
+<% @orders_users_groups.each do|id,orders| %>
+    用户：<span style="color: red;"><%=orders.first.order_user.uname%></span> 状态：
+    <%# meal_by_person =do_about meal_by_person %>
+    <%total=0 %>
+    <%if id==0%>
+        <font color="red">未付款</font>
+        <%if current_order_user.admin?%>
+            <%=link_to '付款',pay_order_user_path(id)%>
+        <%end%>
+    <%else%>
+        已付款
+    <%end%>
+    <table width="100%" class="table table-bordered">
+      <tr>
+        <td>菜名</td><td>单价</td><td>数量</td><td>小计</td>
+      </tr>
+      <%  orders.each do |order|%>
+          <tr>
+            <td class="w-200"><%=order.meal.name rescue '已删除'%></td><td><%=order.meal.price rescue '已删除'%></td><td><%=order.num rescue '已删除'%></td>
+            <td><%=order.Subtotal=order.try(:num).to_i*order.meal.price rescue '已删除'%><%total+=order.Subtotal rescue '已删除'%>元</td>
+          </tr>
+      <%end%>
+      <tr>
+        <td>总计：</td><td colspan="4"><%=total%>元</td>
+      </tr>
+    </table>
+    <br>
+<%end%>

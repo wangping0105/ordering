@@ -1,0 +1,13 @@
+<div class="whidth_100 margin-t-10">
+  <h3 >点餐历史记录</h3>
+  <%@order_histroys = current_order_user.orders.order("created_at desc").page(params[:page])%>
+  <table class="table">
+    <% @order_histroys.each do |o| %>
+      <tr><td><%= o.meal.try(:name) || "菜品被佳丽MM删咯" %> </td><td><%= o.created_at.strftime("%F %T") %></td></tr>
+    <%end %>
+  </table>
+  <div>
+    <%= paginate @order_histroys, :theme => 'my_custom_theme' %>
+  </div>
+
+</div>

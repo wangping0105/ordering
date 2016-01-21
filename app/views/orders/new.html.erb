@@ -1,65 +1,80 @@
 <% if @shop&&@shop.status %>
-  <h3>菜单列表</h3>（若无法操作，请刷请页面）
-  <table border="1" width="600">
-    <tr>
-      <td>菜名</td>
-      <td>单价</td>
-      <td>购买数量</td>
-      <td>是否订购</td>
-    </tr>
-    <% @meal_types.each do |meal_type| %>
-      <tr>
-        <td colspan="4"><font color="red"><%= meal_type.name %>系列</font></td>
-      </tr>
-      <% meal_type.meals.each do |meal| %>
-        <tr>
-          <%= form_for(Order.new) do |f| %>
-            <td><%= meal.name %></td>
-            <td><%= meal.price %></td>
-
-            <%= f.hidden_field :user_id, value: current_order_user.id %>
-            <%= f.hidden_field :meal_id, value: meal.id %>
-
-            <td>数量：<%= f.text_field :num, style: 'width:50px' %></td>
-            <td>
-              <input type="button" onclick="check_num(this)" value="订购"/>
-            </td>
-          <% end %>
-        </tr>
-      <% end if meal_type.meals.present?%>
-    <% end %>
-  </table>
-  </div>
-  <div style="  padding: 20px;height: 600px;overflow: auto;position: absolute;right: 200px;top: 65px;">
-    <% total=0 %>
-    <div style="float: left;padding: 20px;width: 60%;  ">
-      <h3>我的订单</h3>
-      <table border="1" width="600">
-        <tr>
-          <td>菜名</td>
-          <td>单价</td>
-          <td>数量</td>
-          <td>小计</td>
-          <td>是否取消</td>
-        </tr>
-        <% @orders.each do |order| %>
+    <div class="half_mian_body">
+      <div class="div1">
+        <h3>菜单列表<%= "(是否还未选择饭店？)" if @meal_types.blank? %></h3>（若无法操作，请刷请页面）
+        <table class="table table-bordered" width="100%">
           <tr>
-            <td><%= order.meal.name rescue nil %></td>
-            <td><%= order.meal.try(:price) %></td>
-            <td><%= order.try(:num) %></td>
-            <td><%= order.Subtotal=order.try(:num)*order.meal.try(:price).to_f %>
-              <% total+=order.Subtotal %>元
-            </td>
-            <td><input type="button" value="取消订单" onclick="delete_order('<%=order.id%>')"/></td>
+            <td>菜名</td>
+            <td>单价</td>
+            <td>购买数量</td>
+            <td>图片</td>
+            <td>是否订购</td>
           </tr>
-        <% end %>
-        <tr>
-          <td>总计：</td>
-          <td colspan="4"><%= total%>元</td>
-        </tr>
-      </table>
+          <% @meal_types.each do |meal_type| %>
+              <tr>
+                <td colspan="4"><font color="red"><%= meal_type.name %> （饭店哦）</font></td>
+                <td><a href="/orders/random_order?meal_type=<%= meal_type.id %>" class="btn btn-xs btn-warning" >随机点饭</a></td>
+              </tr>
+              <% meal_type.meals.each do |meal| %>
+                  <tr>
+                    <td>
+                      <%= meal.name %>
+                      <%= render 'evaluations/evaluation', meal: meal %>
+                    </td>
+                    <td><%= meal.price %></td>
+                    <td>
+                      <%= form_for(Order.new) do |f| %>
+                          <%= f.hidden_field :user_id, value: current_order_user.id %>
+                          <%= f.hidden_field :meal_id, value: meal.id %>
+                          数量：<%= f.text_field :num ,value:1 ,required:true, style: 'width:50px' %>
+                      <% end %>
+                    </td>
+                    <td class="w-100">
+                      <%= render 'shared/meal_image', meal: meal %>
+                    </td>
+                    <td>
+                      <input type="button" class="btn btn-sm btn-success" onclick="check_num(this)" value="订购"/>
+                    </td>
+                  </tr>
+              <% end if meal_type.meals.present?%>
+          <% end %>
+        </table>
+      </div>
     </div>
-  </div>
+    <div class="half_mian_body">
+        <% total=0 %>
+        <div  class="div1">
+          <h3>我的订单</h3>
+          <table class="table table-bordered" width="100%">
+            <tr>
+              <td>菜名</td>
+              <td>单价</td>
+              <td>数量</td>
+              <td>小计</td>
+              <td>是否取消</td>
+            </tr>
+            <% @orders.each do |order| %>
+                <tr>
+                  <td><%= order.meal.name rescue nil %></td>
+                  <td><%= order.meal.try(:price) %></td>
+                  <td><%= order.try(:num).to_i %></td>
+                  <td><%= order.Subtotal=order.try(:num).to_i*order.meal.try(:price).to_f %>
+                    <% total+=order.Subtotal %>元
+                  </td>
+                  <td><input type="button" value="取消订单" class="btn btn-xs btn-warning" onclick="delete_order('<%=order.id%>')"/></td>
+                </tr>
+            <% end %>
+            <tr>
+              <td>总计：</td>
+              <td colspan="4"><%= total%>元</td>
+            </tr>
+          </table>
+        </div>
+      <div  class="div1">
+        <%= render 'order_history'  %>
+      </div>
+    </div>
 <% else %>
-  <h1>对不起，没有到订饭时间，请等待管理员通知！</h1>
+    <h1>对不起，没有到订饭时间，请等待管理员通知！</h1>
+    <%= render 'talk_model'  %>
 <% end %>
