@@ -66,11 +66,11 @@ end
 
 # Use Capistrano for deployment
 group :development do
-  gem 'capistrano', '~> 3.2.1'
-  gem 'capistrano-rails'
-  gem 'capistrano3-unicorn'
-  # gem 'sepastian-capistrano3-unicorn', '~> 0.5.1'
-  gem 'capistrano-rvm'
+  gem 'capistrano', '~> 3.4.0'
+  gem 'capistrano-rails', '~> 1.1.3'
+  gem 'capistrano3-unicorn', '~> 0.2.1'
+  gem 'capistrano-rvm', '~> 0.1.2'
+  gem 'capistrano-sidekiq'
 end
 
 # To use debugger

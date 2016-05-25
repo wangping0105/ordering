@@ -1,8 +1,7 @@
 # config valid only for Capistrano 3.1
-lock '3.4.0'
 
 set :application, 'ordering_ik'
-set :repo_url, 'ssh://gitlab@gitlab.ikcrm.com:40022/ikcrm_server/ordering_ik.git'
+set :repo_url, 'git@github.com:wangping0105/ordering.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
