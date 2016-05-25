@@ -13,7 +13,7 @@
 worker_processes 5
 
 # Set your full path to application.
-app_path = "/dyne/apps/ordering_ik_production/current"
+app_path = "/dyne/apps/ordering_production/current"
 
 # Since Unicorn is never exposed to outside clients, it does not need to
 # run on the standard HTTP port (80), there is no reason to start Unicorn
@@ -31,7 +31,7 @@ working_directory app_path
 # listen on both a Unix domain socket and a TCP port,
 # we use a shorter backlog for quicker failover when busy
 # listen "/path/to/.unicorn.sock", :backlog => 64
-listen "/tmp/unicorn.ordering_ik.sock"
+listen "/tmp/unicorn.ordering.sock"
 listen 7180, :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)

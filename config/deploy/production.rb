@@ -1,9 +1,9 @@
-set :branch, :master
+set :branch, :development
 set :stage, :production
 
 set :rails_env, :production
 
-set :deploy_to, "/dyne/apps/#{fetch(:application, :ordering_ik)}_#{fetch :stage}"
+set :deploy_to, "/dyne/apps/#{fetch(:application, :ordering)}_#{fetch :stage}"
 
 set :port, 40022
 server 'test.ikcrm.com:40022', user: 'ikcrm_dev', roles: %w{web app db whenever sidekiq}, my_property: :my_value

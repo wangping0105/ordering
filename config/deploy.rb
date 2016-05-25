@@ -1,6 +1,6 @@
 # config valid only for Capistrano 3.1
 
-set :application, 'ordering_ik'
+set :application, 'ordering'
 set :repo_url, 'git@github.com:wangping0105/ordering.git'
 
 # Default branch is :master
