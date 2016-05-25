@@ -46,13 +46,13 @@
       </div>
   <%end %>
 
-  <span class="color-red notification">公告：评价体系出现咯，赶紧评价吧！</span>
+  <span class="color-red notification">公告：吐槽区,吐槽会自动匹配当前饭店哦！</span>
   <br>
   <span class="color-darkr">本店点餐排行榜：</span>
   <div class="marquee_list">
     <marquee class="marquee_self">
       <%@ranking_orders.each_with_index do |o,i| %>
-          <span style="padding:0px 10px">第<a><%= i+1 %></a>名 <%= o.meal.name %>,历史共<a><%= o.count %></a>份</span>
+          <span style="padding:0px 10px">第<a><%= i+1 %></a>名 <%= o.meal.try(:name) %>,历史共<a><%= o.count %></a>份</span>
       <% end if @ranking_orders %>
       <%="这是一家新的饭馆～" if @ranking_orders.blank? %>
     </marquee>

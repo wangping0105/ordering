@@ -1,5 +1,6 @@
 <% @talks.each do |m|%>
   <%
+     next unless m.order_user
      str = m.content
      if str.split("&")[0] == "img"
        str = raw "<img src='#{str.split("&")[1]}' class='maxw-120 maxh-40'>"

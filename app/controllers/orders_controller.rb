@@ -3,21 +3,25 @@ class OrdersController < ApplicationController
   #before_filter :authenticate_user!
 
   def index
-    @orders = Order.current_orders.includes([:order_user, meal: :meal_type] )
-    @meals = Meal.where(id:@orders.map(&:meal_id).uniq)
-    @meal_types = MealType.where(id: @meals.map(&:mtype).uniq)
-    # @meal_types_arr = @meal_types.map{|m| [m.id,m.name]}.to_h
-    # @meals_arr = @meals.map{|m| [m.id,m.name]}.to_h
+    @orders = Order.includes(:order_user, meal:[:meal_type, :attachments]).current_orders
+    @meals = Meal.where(id: @orders.map(&:meal_id).uniq)
+    @meal_types = MealType.where(id: @meals.map(&:mtype).uniq).includes(:meals=>[:evaluations, :attachments])
+
     @orders_groups = @orders.group_by{|r| r[:meal_id] }
     @orders_users_groups = @orders.group_by{|r| r[:user_id] }
-    # binding.pry
-    @shop=Shop.first
+    @shop = Shop.first
   end
+
   def new
-   @meal_types = MealType.useing.includes(:meals => :evaluations)
-   @shop=Shop.first
-   @orders = current_order_user.orders.current_orders.includes(:meal)
+   @shop = Shop.first
+   if @shop && @shop.status
+     @orders = current_order_user.orders.includes(:meal).current_orders
+     @meal_types = MealType.useing.includes(:meals => [:meal_type, :attachments, :evaluations])
+
+     @order_histroys = current_order_user.orders.includes(:meal).order("created_at desc").page(params[:page])
+   end
   end
+
   def create
     @order  =Order.new(order_params)
     if @order.save
@@ -26,6 +30,7 @@ class OrdersController < ApplicationController
       render 'orders/new'
     end
   end
+
   def delete
     @order  =Order.find(params[:id])
     if @order.destroy
@@ -34,9 +39,8 @@ class OrdersController < ApplicationController
       render :text=>2
     end
   end
+
   def paying
-    #orders =Order.all
-    #Order.delete(orders.join(','))
     users=OrderUser.where('status = 1')
     users.each do |u|
       u.update_attribute(:status,0)
@@ -62,13 +66,13 @@ class OrdersController < ApplicationController
   def talk
     content =  params[:content].strip
     if content.present?
-       Talk.create(order_user:current_order_user, content: content)
+       Talk.create(order_user:current_order_user, content: "<<#{MealType.useing.first.try(:name) || "无饭店"}>> #{content}")
     end
     @talks = Talk.limit(1000).order("created_at desc").includes(:order_user)
   end
 
   def show_talk_contents
-    @talks = Talk.limit(1000).order("created_at desc").includes(:order_user)
+    @talks = Talk.limit(200).order("created_at desc").includes(:order_user)
   end
 
   def random_order

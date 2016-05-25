@@ -33,7 +33,7 @@
 <ul>
   <%@users.each do |u| %>
     <li>
-      成员名字：<%=u.uname %><span style="background:bisque;color: cornflowerblue;"><%= u.designation %></span>
+      成员名字：<%=u.uname %><span style="background:bisque;color: cornflowerblue;">[<%= u.designation %>]</span>
     </li>
   <%end %>
 </ul>

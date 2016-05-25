@@ -22,9 +22,9 @@ production:
   database: ordering_ik
   pool: 5
 
-  username: ikcrm
-  password: ikcrm123
-  host: 10.163.96.66
+  username: ordering_ik
+  password: ikcrm_123
+  host: 10.140.235.122
 
 #ordering_ik_production:
 #  adapter: mysql2

@@ -2,9 +2,9 @@ class MealsController < ApplicationController
   RailsRootPath = Rails.root.to_s
 
   def index
-    @meal_type = MealType.where(status:1).first
+    @meal_type = MealType.useing.first
     params[:meal_type_id] ||= (@meal_type.try(:id ) || MealType.first.try(:id))
-    @all_meal_types = MealType.includes(:meals)
+    @all_meal_types = MealType.includes(:meals=>[:evaluations, :attachments])
     @meal_types = @all_meal_types.where(id: params[:meal_type_id])
   end
 

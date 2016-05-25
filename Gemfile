@@ -42,7 +42,8 @@ gem 'kaminari', '~> 0.16.3'
 #gem 'ruby-audio' ,source: "http://gemcutter.org"
 
 gem 'settingslogic'
-
+# 时间统计
+gem 'rack-mini-profiler'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 

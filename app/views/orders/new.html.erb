@@ -1,4 +1,4 @@
-<% if @shop&&@shop.status %>
+<% if @shop && @shop.status %>
     <div class="half_mian_body">
       <div class="div1">
         <h3>菜单列表<%= "(是否还未选择饭店？)" if @meal_types.blank? %></h3>（若无法操作，请刷请页面）
@@ -57,7 +57,7 @@
                 <tr>
                   <td><%= order.meal.name rescue nil %></td>
                   <td><%= order.meal.try(:price) %></td>
-                  <td><%= order.try(:num).to_i %></td>
+                  <td><%= order.try(:size).to_i %></td>
                   <td><%= order.Subtotal=order.try(:num).to_i*order.meal.try(:price).to_f %>
                     <% total+=order.Subtotal %>元
                   </td>
@@ -71,7 +71,7 @@
           </table>
         </div>
       <div  class="div1">
-        <%= render 'order_history'  %>
+        <%= render 'order_history', order_histroys: @order_histroys  %>
       </div>
     </div>
 <% else %>

@@ -15,11 +15,12 @@ class OrderUsersController < ApplicationController
       @user=OrderUser.new
       @user.uname=params[:order_user][:uname]
       @user.role=0
-      if @user.save
+      if params[:order_user][:uname].size < 15 && @user.save
         signeed_in @user
         redirect_to new_order_path
       else
-        render 'index'
+        flash[:error] = "！！！名字过长"
+        redirect_to root_path
       end
     else
       signeed_in @user1
