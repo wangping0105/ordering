@@ -1,11 +1,11 @@
 # source 'https://rubygems.org'
-source 'http://ruby.taobao.org'
+source 'https://ruby.taobao.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 
 # Use sqlite3 as the database for Active Record
-gem 'mysql2'
+gem 'mysql2', '~> 0.3.18'
 gem 'devise'
 gem 'bootstrap-sass', '2.3.2.0'
 # Use SCSS for stylesheets
@@ -28,29 +28,22 @@ gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
-# Deploy with Capistrano
- gem 'capistrano', '~>2.15.4'
- gem 'capistrano_colors', '~>0.5.5'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
+# issues #169
+gem 'rails-backbone', github: 'codebrew/backbone-rails', branch: 'master'
 
 gem 'dragonfly', '~> 1.0.10'
+
+gem 'kaminari', '~> 0.16.3'
 #gem 'ruby-audio' ,source: "http://gemcutter.org"
-gem 'speech2text'
-group :development do
-  gem 'pry-rails'
-  gem 'pry-remote'
-  gem 'pry-nav'
-  # gem 'debugger'
-  gem 'thin'
-  gem "quiet_assets"
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'rack-mini-profiler', require: false
-end
+
+gem 'settingslogic'
+# 时间统计
+gem 'rack-mini-profiler'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
@@ -62,3 +55,32 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+
+# Use unicorn as the app server
+group :production do
+  gem 'unicorn'
+  gem "unicorn-worker-killer"
+  gem 'newrelic_rpm'
+end
+
+# Use Capistrano for deployment
+group :development do
+  gem 'capistrano', '~> 3.4.0'
+  gem 'capistrano-rails', '~> 1.1.3'
+  gem 'capistrano3-unicorn', '~> 0.2.1'
+  gem 'capistrano-rvm', '~> 0.1.2'
+  gem 'capistrano-sidekiq'
+end
+
+# To use debugger
+group :development do
+  gem 'pry-rails'
+  gem 'pry-remote'
+  gem 'pry-nav'
+  # gem 'debugger'
+  gem 'thin'
+  gem "quiet_assets"
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+end

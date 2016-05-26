@@ -1,0 +1,71 @@
+/*宽度 高度*/
+.w-100{width: 100px}
+.w-120{width: 120px}
+.w-150{width: 150px}
+.w-180{width: 180px}
+.w-200{width: 200px}
+.maxw-120{max-width: 120px}
+.maxw-200{max-width: 200px}
+
+.h-20{height: 20px}
+.h-40{height: 40px}
+.h-150{height: 150px}
+.h-180{height: 180px}
+.h-200{height: 200px}
+.h-250{height: 250px}
+.maxh-20{max-height: 20px}
+.maxh-40{max-height: 40px}
+
+.whidth_100{
+    width: 100%;
+}
+.whidth_50{
+    width: 50%;
+}
+.w-16X{width: 16%}
+.w-84X{width: 84%}
+
+.float-l{  float: left;  }
+.float-r{  float: right;  }
+
+
+.margin-10{ margin: 10px }
+.margin-t-10{ margin-top: 10px }
+.margin-t-70{ margin-top: 70px }
+
+.pad-5{  padding: 5px;  }
+
+.border-common{
+    border: 1px solid #e1e1e8;
+}
+
+.bg-white{
+    background: white;
+}
+
+.border{
+    border-bottom: 1px solid;
+}
+
+.color-darkr{
+    color:darkred;
+}
+.color-red{
+    color:red;
+}
+
+.color-green{
+    color:green;
+}
+
+.align-center{
+    text-align: center;
+}
+
+.cursor-p{
+    cursor:pointer
+}
+
+.font-12{
+    font-size: 12px;
+}

@@ -1,52 +1,120 @@
-set :use_sudo, false
-set :group_writable, false
-set :keep_releases, 2 # Less releases, less space wasted
-set :runner, nil # thanks to http://www.rubyrobot.org/article/deploying-rails-20-to-mongrel-with-capistrano-21
-set :application, "ordering"  #应用名称
+# config valid only for Capistrano 3.1
 
-default_run_options[:pty] = true #pty: 伪登录设备
-set :scm, :git   # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
-# set :deploy_via, :copy
-# 如果SCM设为空， 也可通过直接copy本地repo部署
-#set :repository,  "git@github.com:lifang/micro_website.git" #项目在github上的地址
-#set :ssh_options, { :forward_agent => true }  #deploy时获取github上项目使用你本地的ssh key
-#set :git_shallow_clone, 1  #Shallow cloning will do a clone each time, but will only get the top commit, not the entire repository history
-set :branch, "master"  #deploy的时候默认checkout master branch
+set :application, 'ordering'
+set :repo_url, 'git@github.com:wangping0105/ordering.git'
 
-#$:.unshift(File.expand_path('./lib', ENV['rvm_path']))
-#require "rvm/capistrano"           # Load RVM's capistrano plugin.
-#require "bundler/capistrano"       #添加之后部署时会调用bundle install， 如果不需要就可以注释掉
-set :rvm_type, :user
+# Default branch is :master
+# ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
-set :default_stage, "staging"     #一般不写成production，因为写成production的时候运行touch #{current_path}/tmp/restart.txt没效果
-set :stages, %w(staging sandbox production)
-set :rvm_ruby_string, '1.9.3-p448@rails4.0.0'  #设置ruby具体版本号 去rvm安装目录/wrappers里面查看具体ruby版本
+# Default deploy_to directory is /var/www/my_app
+# set :deploy_to, '/var/www/my_app'
 
-require 'capistrano/ext/multistage' #多stage部署所需
-require 'capistrano_colors'
+# Default value for :scm is :git
+# set :scm, :git
+
+# Default value for :format is :pretty
+# set :format, :pretty
+
+# Default value for :log_level is :debug
+# set :log_level, :debug
+
+# Default value for :pty is false
+# set :pty, true
 
 
-after("deploy:symlink") do    #after， before 表示在特定操作之后或之前执行其他任务
+# Default value for :linked_files is []
+# set :linked_files, %w{config/database.yml}
+
+set :linked_files, fetch(:linked_files, []).push(*%W{
+  config/nginx.conf config/unicorn/production.rb
+})
 
 
-end
+# Default value for linked_dirs is []
+# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs, fetch(:linked_dirs, []).push(*%W{
+  config/unicorn log tmp/pids tmp/cache tmp/sockets
+  vendor/bundle public/system
+})
+
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value for keep_releases is 5
+# set :keep_releases, 5
+
+set :unicorn_rack_env, -> { fetch(:rails_env) || "deployment" }
+
+set :unicorn_restart_sleep_time, 5
+
 
 namespace :deploy do
+
+  desc 'Restart application'
   task :restart do
-    #    run "chmod -R 777 /opt/projects/lantan_BAM/" # 每次deploy完给目录下新产生的文件赋权限
- # log link
-  run "rm -rf #{current_path}/log"        #移除当前路径下的log文件
-  run "ln -s #{shared_path}/log/ #{current_path}/log"  #link日志文件到share下的日志文件
+    on roles(:app), in: :sequence, wait: 5 do
+      # Your restart mechanism here, for example:
+      # execute :touch, release_path.join('tmp/restart.txt')
+      # invoke 'unicorn:restart'
+      # invoke 'unicorn:duplicate'
+      invoke 'unicorn:legacy_restart'
+    end
+  end
+  #
+  # desc 'cp assets/images to public/assets'
+  # before :restart, :cp_assets do
+  #   on roles(:app), in: :sequence, wait: 5 do
+  #     execute :cp, '-R', release_path.join('app/assets/images/*'), release_path.join('public/assets/')
+  #   end
+  # end
 
-  run "ln -s /opt/projects/micro_website/public/* #{current_path}/public/" #链接上传的图片
+  after :publishing, :restart
 
-    # database.yml for localized database connection
-    run "rm #{current_path}/config/database.yml"  #移除当前路径下的数据库配置文件
-    run "ln -s #{shared_path}/database.yml #{current_path}/config/database.yml"  #link数据库文件到shared目录下的yml文件
+  after :restart, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # Here we can do anything such as:
+      # within release_path do
+      #   execute :rake, 'cache:clear'
+      # end
+    end
+  end
 
-    #nginx -s reload 是重启Nginx
-    #touch /tmp/restart.txt 是重启当前的Rails项目
-    #Passenger会检查这个文件，如果这个文件时间戳改变了，或者被创建或者移除，Passenger就会reload。
-    run "touch #{current_path}/tmp/restart.txt"
+  desc "run rake task on remote server 'cap development deploy:runrake task=stats'"
+  task :runrake do
+    on roles(:db), in: :groups, limit: 1, wait: 10 do
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          rake ENV['task']
+        end
+      end
+    end
+  end
+
+  desc 'upload setup_config for application'
+  task :upload_config do
+    on roles(:web), in: :sequence, wait: 5 do
+      fetch(:linked_files).each do |file_path|
+        unless test "[ -f #{shared_path}/#{file_path} ]"
+          upload!("#{file_path}", "#{shared_path}/#{file_path}", via: :scp)
+        end
+      end
+    end
+  end
+
+  desc 'update git remote repo url'
+  task :update_git_repo do
+    on release_roles :all do
+      with fetch(:git_environmental_variables) do
+        within repo_path do
+          current_repo_url = execute :git, :config, :'--get', :'remote.origin.url'
+          unless repo_url == current_repo_url
+            execute :git, :remote, :'set-url', 'origin', repo_url
+            execute :git, :remote, :update
+
+            execute :git, :config, :'--get', :'remote.origin.url'
+          end
+        end
+      end
+    end
   end
 end

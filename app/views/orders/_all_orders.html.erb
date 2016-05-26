@@ -1,0 +1,61 @@
+<h1>所有人的订单</h1>
+<%total, total_count = 0, 0 %>
+<%arr=[]  %>
+<table width="100%" class="table table-bordered">
+  <tr>
+    <td>菜名</td><td>图片</td><td>单价</td><td>数量</td><td>小计</td>
+  </tr>
+  <%  @meal_types.each do |meal_type|%>
+      <tr>
+        <td colspan="5">
+          <font color="red"><%=meal_type.name%> 系列 </font>
+        </td>
+      </tr>
+      <% meal_type.meals.each do |meal| %>
+          <%
+             orders = @orders_groups[meal.id]
+             sum = 0
+          %>
+          <%if orders %>
+              <% orders.each do |order|
+                sum += order.num.to_i
+              end%>
+              <tr>
+                <td class="w-200">
+                  <%= meal.name %>
+                  <%= render 'evaluations/evaluation', meal: meal %>
+                </td>
+                <td class="w-120">
+                    <%= render 'shared/meal_image', meal: meal %>
+                </td>
+                <td><%= meal.price %></td>
+                <td>
+                  <%= sum %><%total_count +=sum  %>
+                </td>
+                <td><%= sum * meal.price.to_f %>
+                  <% total += sum * meal.price.to_f %>元
+                </td>
+              </tr>
+          <% end %>
+      <%end if meal_type.meals.present?%>
+  <%end%>
+  <tr >
+    <td>总计：</td>
+    <td style="font-size: 18px;color:mediumvioletred;">
+      <%=total%>元
+    </td>
+    <td style="font-size: 18px;color:mediumvioletred;">
+      <%= total_count %>份
+    </td>
+    <td colspan="2">
+      <% if current_order_user.role==1 %>
+          <%=link_to '付款',paying_path, class:"btn-primary btn" %>
+          <%if @shop.status%>
+              <%=link_to '结束',open_path, class:"btn-primary btn" %>
+          <%else%>
+              <%=link_to '开始',open_path, class:"btn-primary btn"%>
+          <%end%>
+      <%end%>
+    </td>
+  </tr>
+</table>

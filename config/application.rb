@@ -21,3 +21,6 @@ module Ordering
     # config.i18n.default_locale = :de
   end
 end
+
+
+$This_is_messages = {}

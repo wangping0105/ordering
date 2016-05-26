@@ -1,0 +1,39 @@
+<h2>短信和语音-提醒点饭</h2>
+<%= form_tag("/order_users/notice") do |f| %>
+  <ul>
+    <li>提醒人：
+    <select name="phone">
+      <% @all_phones.each do |k,v| %>
+        <option value="<%= v %>"><%= k %></option>
+      <%end  %>
+    </select>
+    内容： <input name="content" value="爱客晚饭--你要点饭吗">
+    <input type="hidden" name="sender" value="sms">
+    <button >发送短信</button>
+    </li>
+  </ul>
+<% end %>
+
+<%= form_tag("/order_users/notice") do |f| %>
+  <ul>
+    <li>提醒人：
+    <select name="phone">
+      <% @all_phones.each do |k,v| %>
+        <option value="<%= v %>"><%= k %></option>
+      <%end  %>
+    </select>
+    <input type="hidden" name="sender" value="voice">
+    <button >语音电话提醒</button>
+    </li>
+    <li> (语音内容只支持字母和数字, 默认为: nydfm) </li>
+  </ul>
+<% end %>
+
+<h2> 所有成员</h2>
+<ul>
+  <%@users.each do |u| %>
+    <li>
+      成员名字：<%=u.uname %><span style="background:bisque;color: cornflowerblue;">[<%= u.designation %>]</span>
+    </li>
+  <%end %>
+</ul>

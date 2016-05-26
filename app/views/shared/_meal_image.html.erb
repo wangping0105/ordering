@@ -1,0 +1,7 @@
+<div class="whidth_100 align-center  cursor-p"  data-toggle="popover_image" >
+<%unless meal.attachments.blank? %>
+    <img src="<%= meal.attachments.last.file_path %>" class="maxw-120 maxh-40" />
+<%else %>
+    <img src="/none.jpg" class="maxw-120  maxh-40"  />
+<%end %>
+</div>

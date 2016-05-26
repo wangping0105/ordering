@@ -1,0 +1,60 @@
+<div class="div1">
+  <div class="user_info">
+    欢迎您：<%=current_order_user.uname%>
+  </div>
+  <div>
+    <ul class="my_ul">
+      <li><%=link_to '订单首页', orders_path ,class: 'all_orders' %></li>
+      <li><%=link_to '我要订饭', new_order_path ,class: 'my_orders' %></li>
+      <% if current_order_user.admin? %>
+          <li> <%=link_to '管理饭菜', meals_path  %></li>
+          <li> <%=link_to '所有成员', all_users_order_users_path  %></li>
+      <%end %>
+      <li> <%=link_to '退出', sign_out_order_users_path  %></li>
+      <% if current_order_time.present? %>
+          <li>
+            <DIV id='time'>
+              <SCRIPT>
+                  <% t_i =  current_order_time.to_f %>
+                  get_now_time("<%= t_i %>")
+                  setInterval("document.getElementById('time').innerHTML=get_now_time('<%= t_i %>');",1000);
+              </SCRIPT>
+            </DIV>
+          </li>
+      <%end %>
+    </ul>
+  </div>
+
+  <% if current_order_time.present? %>
+      <%unless current_order_user.orders.current_orders.present? %>
+          <div class="alert alert-danger" role="alert">
+            <strong>小提示：您今天还未订饭哦～不点就没的吃咯 </strong>
+          </div>
+      <%else %>
+          <div class="alert alert-success" role="alert">
+            <strong>小提示：您已经点了【<%= current_order_user.orders.current_orders.first.meal.try(:name) %>】<%= "等套餐" if current_order_user.orders.current_orders.size>1%>，耐心等待吧！ </strong>
+          </div>
+      <%end  %>
+  <%else %>
+      <div class="alert alert-danger" role="alert">
+        <strong>提示：
+          <% if current_order_user.orders.current_orders.present? %>
+              你本次点的是【<%= current_order_user.orders.current_orders.first.meal.try(:name) %>】<%= "等套餐" if current_order_user.orders.current_orders.size > 1 %>,
+          <% end %>
+          订饭已经结束咯～
+        </strong>
+      </div>
+  <%end %>
+
+  <span class="color-red notification">公告： 我搬家啦！</span>
+  <br>
+  <span class="color-darkr">本店点餐排行榜：</span>
+  <div class="marquee_list">
+    <marquee class="marquee_self">
+      <%@ranking_orders.each_with_index do |o,i| %>
+          <span style="padding:0px 10px">第<a><%= i+1 %></a>名 <%= o.meal.try(:name) %>,历史共<a><%= o.count %></a>份</span>
+      <% end if @ranking_orders %>
+      <%="这是一家新的饭馆～" if @ranking_orders.blank? %>
+    </marquee>
+  </div>
+</div>

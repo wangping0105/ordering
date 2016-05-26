@@ -1,0 +1,30 @@
+<%
+   evaluations = meal.evaluations
+   good = evaluations.select{|e| e.types == "good"}
+   common = evaluations.select{|e| e.types == "common"}
+   bad = evaluations.select{|e| e.types == "bad"}
+   mine = evaluations.select{|e| e.order_user_id ==  current_order_user.id }.first
+   @is_ordered_meals ||= current_order_user.orders.where(meal: meal.meal_type.meals).distinct
+   is_ordered = @is_ordered_meals.select{|m| m.meal_id == meal.id}
+
+%>
+<ul class="my_ul font-12">
+  <li class="color-green">好评: <%= good.size %></li>
+  <li class="">中评: <%= common.size %></li>
+  <li class="color-red">差评: <%= bad.size %></li>
+</ul>
+<%if is_ordered.present? %>
+  <%unless mine.present? %>
+    <div class="evaluation" data-id="<%= meal.id %>">
+      觉得如何?<%= select_tag(:evaluation, options_for_select([['请选择',nil], ['好',0], ['一般',1], ['差',2]])) %>
+    </div>
+  <%else %>
+    <div class="evaluation" data-id="<%= meal.id %>">
+      您的评价：<%= mine.types_i18n %>
+    </div>
+  <%end %>
+<%else %>
+  <div class="evaluation" data-id="<%= meal.id %>">
+    您未点过该菜，无法评价！
+  </div>
+<%end %>

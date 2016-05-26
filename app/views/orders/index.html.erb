@@ -1,77 +1,11 @@
-<div style="float: left;padding: 20px;width: 40%;  ">
-  <h1>所有人的订单</h1>
-  <%total=0 %>
-  <%arr=[]  %>
-  <table border="1" width="400">
-    <tr>
-      <td>菜名</td><td>单价</td><td>数量</td><td>小计</td> 
-    </tr>
-    <%  @meal_types.each do |meal_type|%>
-      <tr>
-        <td colspan="5"><font color="red"><%=meal_type.name%> 系列 </font></td>
-      </tr>
-      <% meal_type.meals.each do |meal| %>
-        <%
-           orders = @orders_groups[meal.id]
-           sum = 0
-        %>
-        <%if orders %>
-          <% orders.each do |order|
-               sum += order.num
-             end%>
-          <tr>
-            <td><%= meal.name %></td>
-            <td><%= meal.price %></td>
-            <td><%= sum %></td>
-            <td><%= sum * meal.price.to_f %>
-              <% total += sum * meal.price.to_f %>元
-            </td>
-          </tr>
-        <% end %>
-      <%end if meal_type.meals.present?%>
-    <%end%>
-    <tr>
-      <td>总计：</td><td colspan="4"><%=total%>元 
-        <% if current_order_user.role==1 %>
-          <%=link_to '付款',paying_path%>
-          <%if @shop.status%>
-            <%=link_to '结束',open_path%>
-          <%else%>
-            <%=link_to '开始',open_path%>
-          <%end%>
-        <%end%>
-      </td>
-    </tr>
-  </table>
+<div class="half_mian_body">
+  <div class="div1"> <%= render 'all_orders'  %> </div>
+  <div class="div1"> <%= render 'all_order_details' %> </div>
 </div>
 
-<div style="float:left;padding: 20px;">
-  <h3>成员订单明细(<%=@orders_users_groups.length%>人)</h3>
-  <% @orders_users_groups.each do|id,orders| %>
-    用户：<span style="color: red;"><%=orders.first.order_user.uname%></span> 状态：
-    <%# meal_by_person =do_about meal_by_person %>
-    <%total=0 %>
-    <%if id==0%>
-    <font color="red">未付款</font>
-      <%if current_order_user.admin?%>
-        <%=link_to '付款',pay_order_user_path(id)%>
-      <%end%>
-    <%else%>
-      已付款
-    <%end%>
-    <table border="1" width="600">
-      <tr>
-        <td>菜名</td><td>单价</td><td>数量</td><td>小计</td>
-      </tr>
-      <%  orders.each do |order|%>
-        <tr>
-          <td><%=order.meal.name%></td><td><%=order.meal.price%></td><td><%=order.num%></td>
-          <td><%=order.Subtotal=order.try(:num)*order.meal.price%><%total+=order.Subtotal%>元</td>
-        </tr>
-      <%end%>
-      <tr>
-        <td>总计：</td><td colspan="4"><%=total%>元</td>
-      </tr>
-    </table>
-  <%end%>
+<div class="half_mian_body">
+  <div class="div1">
+    <%= render 'talk_model'  %>
+  </div>
+
 </div>

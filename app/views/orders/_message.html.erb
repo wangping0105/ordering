@@ -1,0 +1,18 @@
+<% @talks.each do |m|%>
+  <%
+     next unless m.order_user
+     str = m.content
+     if str.split("&")[0] == "img"
+       str = raw "<img src='#{str.split("&")[1]}' class='maxw-120 maxh-40'>"
+     end
+  %>
+  <div style="<%= current_order_user == m.order_user ? "text-align: right;": "" %>">
+    <span class='<%= current_order_user == m.order_user  ? "current_user": "other_user" %>' >
+      <%= m.order_user.uname %>
+      <span style="background:bisque;color: cornflowerblue;"><%= m.order_user.designation %> </span>(<%= (m.created_at+8*3600).strftime("%m-%d %H:%M") %>):
+    </span>
+    <label><span class="<%= "admin_content" if m.order_user.admin? %>" <%= 'data-toggle=popover_image' if(m.content.split("&")[0] == "img") %> >
+      <%= str %>
+    </span></label>
+  </div>
+<%end  %>
