@@ -1,6 +1,7 @@
 #encoding:utf-8
 class OrdersController < ApplicationController
   #before_filter :authenticate_user!
+  Limit_size = 200
 
   def index
     @orders = Order.includes(:order_user, meal:[:meal_type, :attachments]).current_orders
@@ -66,13 +67,20 @@ class OrdersController < ApplicationController
   def talk
     content =  params[:content].strip
     if content.present?
-       Talk.create(order_user:current_order_user, content: "<<#{MealType.useing.first.try(:name) || "无饭店"}>> #{content}")
+      Talk.create(order_user:current_order_user, content: content, meal_type: MealType.useing.first)
     end
-    @talks = Talk.limit(1000).order("created_at desc").includes(:order_user)
+    @talks = Talk.limit(Limit_size).order("created_at desc").includes(:order_user)
+    @talks = @talks.where(meal_type: MealType.useing.first) if MealType.useing.first
   end
 
   def show_talk_contents
-    @talks = Talk.limit(200).order("created_at desc").includes(:order_user)
+    @meal = MealType.useing.first
+
+    if @meal
+      @talks = @meal.talks.limit(Limit_size).order("created_at desc").includes(:order_user)
+    else
+      @talks = Talk.limit(Limit_size).order("created_at desc").includes(:order_user)
+    end
   end
 
   def random_order

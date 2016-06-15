@@ -1,6 +1,7 @@
 class MealType < ActiveRecord::Base
   has_many :meals, foreign_key: :mtype
   has_many :orders
+  has_many :talks
 
   scope :useing, ->{where(status: 1)}
 
@@ -9,5 +10,4 @@ class MealType < ActiveRecord::Base
     }
     self.update(status:1)
   end
-
 end

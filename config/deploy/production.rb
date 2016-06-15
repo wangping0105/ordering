@@ -1,4 +1,4 @@
-set :branch, :development
+set :branch, :master
 set :stage, :production
 
 set :rails_env, :production

@@ -1,3 +1,7 @@
+<div style="position:absolute;">
+    <span style="color: darkgreen">当前饭店: << <%= @meal.try(:name).to_s %> >></span>
+</div>
+<br>
 <% @talks.each do |m|%>
   <%
      next unless m.order_user
