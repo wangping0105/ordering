@@ -1,13 +1,17 @@
 class MealTypesController < ApplicationController
 
   def change_meal_type
-    mealtype = MealType.find_by(id: params[:meal_type][:id])
-    mealtype.can_use if mealtype
+    if Shop.first.status
+      flash[:error] = "请先结束本次饭馆!"
+    else
+      mealtype = MealType.find_by(id: params[:meal_type][:id])
+      mealtype.can_use if mealtype
+    end
+
     redirect_to meals_path(meal_type_id: params[:meal_type][:id])
   end
 
   def new
-
   end
 
   def create

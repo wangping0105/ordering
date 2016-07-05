@@ -6,8 +6,8 @@ class MealType < ActiveRecord::Base
   scope :useing, ->{where(status: 1)}
 
   def can_use
-    MealType.useing.each{|a| a.update(status:0)
-    }
-    self.update(status:1)
+    MealType.useing.each{|a| a.update(status:0) }
+
+    self.update(status: true)
   end
 end

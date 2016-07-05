@@ -28,10 +28,10 @@ class OrderUsersController < ApplicationController
     end
   end
   def pay
-    user = OrderUser.find_by(uname:params[:id])
-    user.update_attribute(:status,1)
+    user = OrderUser.find_by(id: params[:id])
+    user.update_attribute(:status, 1) if user
 
-   redirect_to orders_path
+    redirect_to orders_path
   end
 
   def all_users

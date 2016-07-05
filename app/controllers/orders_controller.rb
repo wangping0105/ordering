@@ -42,25 +42,25 @@ class OrdersController < ApplicationController
   end
 
   def paying
-    users=OrderUser.where('status = 1')
-    users.each do |u|
-      u.update_attribute(:status,0)
-    end
+    OrderUser.where(status: 1).update_all(status: 0)
+
     flag = Time.now.to_i
     Order.update_all(Subtotal:flag, status:1 )
     redirect_to orders_path
   end
 
   def open
-     @shop=Shop.find(1)
+     @shop=Shop.first
      flag=false
      if(!@shop.status)
        flag=true
        @shop.remember_order_time = Time.now
      else
+       OrderUser.where(status: 1).update_all(status: 0)
        @shop.remember_order_time = nil
      end
-     @shop.update_attribute(:status,flag)
+     @shop.update_attribute(:status, flag)
+
      redirect_to orders_path
   end
 

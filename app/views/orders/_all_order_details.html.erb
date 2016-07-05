@@ -1,15 +1,16 @@
 <h3>成员订单明细(<%=@orders_users_groups.length%>人)</h3>
-<% @orders_users_groups.each do|id,orders| %>
+<% @orders_users_groups.each do|id, orders| %>
     用户：<span style="color: red;"><%=orders.first.order_user.uname%></span><span style="background:bisque;color: cornflowerblue;">【<%= orders.first.order_user.designation %>】</span>状态：
     <%# meal_by_person =do_about meal_by_person %>
     <%total=0 %>
-    <%if id==0%>
-        <font color="red">未付款</font>
+
+    <%unless orders.first.order_user.status%>
+        <font color="red">未领取</font>
         <%if current_order_user.admin?%>
-            <%=link_to '付款',pay_order_user_path(id)%>
+            <%=link_to '点击领取', pay_order_user_path(id)%>
         <%end%>
     <%else%>
-        已付款
+        已领取
     <%end%>
     <table width="100%" class="table table-bordered">
       <tr>
