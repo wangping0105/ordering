@@ -84,6 +84,7 @@ table tr td{
     width: 150px;
     display: block;
     float: left;
+    word-wrap:break-word;
 }
 
 li{

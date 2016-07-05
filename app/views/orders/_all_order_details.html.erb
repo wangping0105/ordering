@@ -6,7 +6,7 @@
 
     <%unless orders.first.order_user.status%>
         <font color="red">未领取</font>
-        <%if current_order_user.admin?%>
+        <%if current_order_user.admin? || current_order_user.id == orders.first.order_user.id%>
             <%=link_to '点击领取', pay_order_user_path(id)%>
         <%end%>
     <%else%>
