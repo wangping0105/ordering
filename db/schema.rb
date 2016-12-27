@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615092729) do
+ActiveRecord::Schema.define(version: 20161227023544) do
 
   create_table "attachments", force: :cascade do |t|
     t.string   "name",                limit: 255
+    t.integer  "user_id",             limit: 4
     t.string   "file_path",           limit: 255
     t.string   "file_content_type",   limit: 255
     t.integer  "file_size",           limit: 4
@@ -35,20 +36,21 @@ ActiveRecord::Schema.define(version: 20160615092729) do
   add_index "attachments", ["order_user_type", "order_user_id"], name: "index_attachments_on_order_user_type_and_order_user_id", using: :btree
 
   create_table "evaluations", force: :cascade do |t|
-    t.integer  "order_user_id",    limit: 4
     t.integer  "evaluatable_id",   limit: 4
     t.string   "evaluatable_type", limit: 255
     t.integer  "types",            limit: 4
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.integer  "user_id",          limit: 4
   end
 
   create_table "meal_types", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "store_id",   limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "status",     limit: 4
+    t.string   "name",        limit: 255
+    t.integer  "store_id",    limit: 4
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.integer  "status",      limit: 4
+    t.integer  "meals_count", limit: 4,   default: 0
   end
 
   create_table "meals", force: :cascade do |t|
@@ -58,6 +60,21 @@ ActiveRecord::Schema.define(version: 20160615092729) do
     t.datetime "updated_at"
     t.integer  "mtype",      limit: 4
   end
+
+  create_table "operation_logs", force: :cascade do |t|
+    t.integer  "user_id",       limit: 4
+    t.string   "action",        limit: 255
+    t.string   "loggable_type", limit: 255
+    t.integer  "loggable_id",   limit: 4
+    t.text     "note",          limit: 65535
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "operation_logs", ["action"], name: "index_operation_logs_on_action", using: :btree
+  add_index "operation_logs", ["loggable_id"], name: "index_operation_logs_on_loggable_id", using: :btree
+  add_index "operation_logs", ["loggable_type"], name: "index_operation_logs_on_loggable_type", using: :btree
+  add_index "operation_logs", ["user_id"], name: "index_operation_logs_on_user_id", using: :btree
 
   create_table "order_users", force: :cascade do |t|
     t.string   "uname",      limit: 255
@@ -88,19 +105,20 @@ ActiveRecord::Schema.define(version: 20160615092729) do
   end
 
   create_table "talks", force: :cascade do |t|
-    t.text     "content",       limit: 65535
-    t.integer  "order_user_id", limit: 4
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "meal_type_id",  limit: 4
+    t.text     "content",      limit: 65535
+    t.integer  "user_id",      limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.integer  "meal_type_id", limit: 4
   end
-
-  add_index "talks", ["order_user_id"], name: "index_talks_on_order_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",               limit: 255
+    t.string   "pinyin",                 limit: 255
+    t.string   "phone",                  limit: 255
+    t.integer  "status",                 limit: 4,   default: 0
+    t.string   "deleted_at",             limit: 255
     t.string   "truename",               limit: 255
-    t.string   "password",               limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "email",                  limit: 255, default: "", null: false
@@ -113,6 +131,7 @@ ActiveRecord::Schema.define(version: 20160615092729) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",     limit: 255
     t.string   "last_sign_in_ip",        limit: 255
+    t.integer  "role",                   limit: 4,   default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

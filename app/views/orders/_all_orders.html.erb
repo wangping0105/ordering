@@ -1,7 +1,10 @@
 <h1>所有人的订单</h1>
+
+
 <%total, total_count = 0, 0 %>
 <%arr=[]  %>
-<table width="100%" class="table table-bordered">
+<!--class= table-striped 无边框 table-bordered 有边框-->
+<table width="100%" class="table table-striped">
   <tr>
     <td>菜名</td><td>图片</td><td>单价</td><td>数量</td><td>小计</td>
   </tr>
@@ -48,7 +51,7 @@
       <%= total_count %>份
     </td>
     <td colspan="2">
-      <% if current_order_user.role==1 %>
+      <% if current_user.role==1 %>
           <%=link_to '付款',paying_path, class:"btn-primary btn" %>
           <%if @shop.status%>
               <%=link_to '结束',open_path, class:"btn-primary btn" %>

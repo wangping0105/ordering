@@ -1,0 +1,97 @@
+<div class="col-sm-9" >
+  <div class="col-md-12">
+    <h2 class="sub-header">用户列表</h2>
+    <%=link_to '新增用户', new_user_path, class: 'btn-primary btn new_user_btn' %>
+  </div>
+
+  <form action="<%= users_path %>">
+    <div class="col-md-4">
+      <%= text_field_tag :query, params[:query], placeholder: '输入用户姓名查找', class: 'form-control' %>
+    </div>
+
+    <div class="col-md-2">
+      <%=submit_tag '查找', class: 'btn-default btn' %>
+    </div>
+  </form>
+
+  <div class="col-md-12">
+    <hr>
+    <div class="table-responsive">
+      <!--class= table-striped 无边框 table-bordered 有边框-->
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>姓名</th>
+          <th>昵称</th>
+          <th>电话</th>
+          <th>邮箱</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <%@users.each_with_index do |user, i|  %>
+          <tr>
+            <td><%= i+1 %></td>
+            <td><%=link_to user.truename, edit_user_path(user) %></td>
+            <td><%= user.username %></td>
+            <td><%= user.phone %></td>
+            <td><%= user.email%></td>
+            <td>
+              <% unless user == current_user %>
+                <%=link_to '密码重置', reset_default_password_user_path(user, page: params[:page] || 1), method: :put, data: {confirm: '确认将密码重置吗？'} %>
+              <%end %>
+              <%=link_to '修改信息', edit_user_path(user) %>
+              <% unless user.admin? %>
+                <%=link_to '删除', user_path(user, page: params[:page] || 1), method: :delete, data: {confirm: "确认删除#{user.truename}吗？"} %>
+              <% end %>
+            </td>
+          </tr>
+        <%end %>
+        </tbody>
+      </table>
+      <%= paginate  @users %>
+    </div>
+  </div>
+</div>
+<div class="col-sm-3" >
+  <h3>短信和语音提醒</h3>
+  <%= form_tag("/users/notice") do |f| %>
+    <ul class="list-group">
+      <li class="list-group-item">提醒人：
+        <select name="phone">
+          <% @all_phones.each do |k,v| %>
+            <option value="<%= v %>"><%= k %></option>
+          <%end  %>
+        </select>
+      </li>
+      <li class="list-group-item">
+        内容： <input name="content" value="爱客晚饭--你要点饭吗">
+      </li>
+      <li class="list-group-item">
+        <input type="hidden" name="sender" value="sms">
+
+        <button data-type="sms">发送短信</button>
+        <button data-type="voice">发送语音</button>
+      </li>
+      <li class="list-group-item"> (语音内容只支持字母和数字, 默认为: nydfm) </li>
+    </ul>
+  <% end %>
+</div>
+<script>
+  <%= content_for :js_in_footer do%>
+  <%= javascript_tag do %>
+  $("button").on("click", function(e) {
+    e.preventDefault(); // 移除掉原生的submit处理
+    var _form = $(this).parents("form")[0]
+    if (!$(_form).valid()) {
+      return;
+    }
+    $(this).prevAll("[name=sender]").val($(this).attr("data-type"));
+    // $(this).attr("disabled", true); //防止重复提交
+
+    $(_form).submit();
+  });
+  <%end%>
+  <%end%>
+</script>

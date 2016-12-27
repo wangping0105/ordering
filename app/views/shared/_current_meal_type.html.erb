@@ -1,0 +1,16 @@
+<div class="col-md-12">
+    <div class="col-md-12">
+      <label>当前饭店：</label><span class="color-green"><%= @current_meal_type.try(:name) || "还未选择" %></span>
+    </div>
+    <div class="col-md-4">
+      <% if controller_name == "meals" %>
+        <%= link_to '更换饭馆', meal_types_path, class:"btn-primary btn" %>
+      <% else %>
+        <%= link_to '饭菜管理', meals_path, class:"btn-primary btn" %>
+      <% end %>
+    </div>
+
+</div>
+<div class="col-md-12">
+  <hr class="featurette-divider">
+</div>

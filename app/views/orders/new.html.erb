@@ -1,8 +1,9 @@
+<%= render 'ranking' %>
 <% if @shop && @shop.status %>
     <div class="half_mian_body">
       <div class="div1">
         <h3>菜单列表<%= "(是否还未选择饭店？)" if @meal_types.blank? %></h3>（若无法操作，请刷请页面）
-        <table class="table table-bordered" width="100%">
+        <table class="table table-striped" width="100%">
           <tr>
             <td>菜名</td>
             <td>单价</td>
@@ -24,7 +25,7 @@
                     <td><%= meal.price %></td>
                     <td>
                       <%= form_for(Order.new) do |f| %>
-                          <%= f.hidden_field :user_id, value: current_order_user.id %>
+                          <%= f.hidden_field :user_id, value: current_user.id %>
                           <%= f.hidden_field :meal_id, value: meal.id %>
                           数量：<%= f.text_field :num ,value:1 ,required:true, style: 'width:50px' %>
                       <% end %>
@@ -45,7 +46,7 @@
         <% total=0 %>
         <div  class="div1">
           <h3>我的订单</h3>
-          <table class="table table-bordered" width="100%">
+          <table class="table table-striped" width="100%">
             <tr>
               <td>菜名</td>
               <td>单价</td>

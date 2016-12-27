@@ -1,8 +1,8 @@
 class EvaluationsController < ApplicationController
   def create
-    evaluation = current_order_user.evaluations.find_by(evaluatable_id: this_params[:evaluatable_id], evaluatable_type: this_params[:evaluatable_type])
+    evaluation = current_user.evaluations.find_by(evaluatable_id: this_params[:evaluatable_id], evaluatable_type: this_params[:evaluatable_type])
     unless evaluation.present?
-      evaluation = current_order_user.evaluations.new(this_params)
+      evaluation = current_user.evaluations.new(this_params)
     else
       evaluation.types = this_params[:types]
     end

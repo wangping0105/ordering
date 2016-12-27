@@ -2,10 +2,10 @@ class MealsController < ApplicationController
   RailsRootPath = Rails.root.to_s
 
   def index
-    @meal_type = MealType.useing.first
-    params[:meal_type_id] ||= (@meal_type.try(:id ) || MealType.first.try(:id))
+    @current_meal_type = MealType.useing.first
     @all_meal_types = MealType.includes(:meals=>[:evaluations, :attachments])
-    @meal_types = @all_meal_types.where(id: params[:meal_type_id])
+
+    @meal_types = @all_meal_types.where(id: params[:meal_type_id] || @current_meal_type.id)
   end
 
   def new
@@ -16,7 +16,7 @@ class MealsController < ApplicationController
   end
 
   def create
-    meal = Meal.new(meal_params)
+    meal = Meal.new(meal_params.merge(mtype: params[:meal_type_id]))
     meal.price = meal.price.to_f
     if meal.save
       redirect_to meals_path( meal_type_id: params[:meal_type_id])
@@ -28,7 +28,7 @@ class MealsController < ApplicationController
   def add_attachments
     if params[:attachment].present?
       file = params[:attachment]
-      new_file_name = "#{current_order_user.id}#{Time.now.to_i}#{file.original_filename}"
+      new_file_name = "#{current_user.id}#{Time.now.to_i}#{file.original_filename}"
       file_dir = "#{RailsRootPath}/public/system/attachments/meals"
       _file_path = "/system/attachments/meals/#{new_file_name}"
       file_path = "#{file_dir}/#{new_file_name}"
@@ -39,7 +39,7 @@ class MealsController < ApplicationController
                              file_path: _file_path,
                              file_content_type: file.content_type,
                              file_size: file.size,
-                             order_user_id: current_order_user.id
+                             user_id: current_user.id
       )
       if meal.save
         new_file = File.new(file_path, "wb")

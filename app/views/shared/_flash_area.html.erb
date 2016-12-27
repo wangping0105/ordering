@@ -1,9 +1,9 @@
 <%if flash.present? %>
-  <% flash.each do |key, value| %>
-    <div id= "notice"  class = "alert alert-<%= key %>">
-        <div class="flash ">
-          <%= value %>
-        </div>
-    </div>
-  <% end %>
+  <div class="alert alert-warning">
+    <a href="#" class="close" data-dismiss="alert">×</a>
+    <%= flash.map{|k, v| v}.join(",") %>
+  </div>
 <%end %>
+
+<div id="faye_msg" class="alert_msg faye_msg">
+</div>

@@ -10,7 +10,7 @@ class CreateAttachments < ActiveRecord::Migration
       t.datetime :deleted_at
       t.text     :remark
       t.string   :sub_type
-      t.references :order_user, polymorphic: true, index: true
+      t.references :user, polymorphic: true, index: true
 
       t.timestamps null: false
     end

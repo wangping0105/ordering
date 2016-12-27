@@ -1,18 +1,21 @@
 <h3>成员订单明细(<%=@orders_users_groups.length%>人)</h3>
 <% @orders_users_groups.each do|id, orders| %>
-    用户：<span style="color: red;"><%=orders.first.order_user.uname%></span><span style="background:bisque;color: cornflowerblue;">【<%= orders.first.order_user.designation %>】</span>状态：
+
+  <% if orders.first.user.present? %>
+    用户：<span style="color: red;"><%=orders.first.user.username%></span><span style="background:bisque;color: cornflowerblue;">【<%= orders.first.user.designation %>】</span>状态：
     <%# meal_by_person =do_about meal_by_person %>
     <%total=0 %>
 
-    <%unless orders.first.order_user.status%>
+    <%unless orders.first.user.status%>
         <font color="red">未领取</font>
-        <%if current_order_user.admin? || current_order_user.id == orders.first.order_user.id%>
+        <%if current_user.admin? || current_user.id == orders.first.user.id%>
             <%=link_to '点击领取', pay_order_user_path(id)%>
         <%end%>
     <%else%>
         已领取
     <%end%>
-    <table width="100%" class="table table-bordered">
+    <!--class= table-striped 无边框 table-bordered 有边框-->
+    <table width="100%" class="table table-striped">
       <tr>
         <td>菜名</td><td>单价</td><td>数量</td><td>小计</td>
       </tr>
@@ -27,4 +30,5 @@
       </tr>
     </table>
     <br>
+  <%end%>
 <%end%>

@@ -1,7 +1,7 @@
 # config valid only for Capistrano 3.1
 
 set :application, 'ordering'
-set :repo_url, 'git@github.com:wangping0105/ordering.git'
+set :repo_url, 'ssh://gitlab@gitlab.ikcrm.com:40022/wangp/ordering.git'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call

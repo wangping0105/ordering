@@ -1,16 +1,22 @@
 Ordering::Application.routes.draw do
-  devise_for :users
-  resources :order_users do
+  devise_for :users, controllers: {
+    sessions: 'users/sessions',
+    registrations: 'users/registrations'
+  }
+
+  resources :users do
     member do
       get :pay
+      put :reset_default_password
     end
     collection do
-      get :sign_out, :all_users
-      post :notice
+      get :sign_out
+      post :notice, :add_user
     end
   end
 
   resources :evaluations
+  resources :rankings
   resources :orders do
     collection do
       post :talk
@@ -34,6 +40,7 @@ Ordering::Application.routes.draw do
   match '/open',to: 'orders#open', via: 'get'
   match '/destory',to:'orders#delete',via: 'get'
   match '/paying',to:'orders#paying',via: 'get'
-  root to: "order_users#index"
+  root to: "orders#index"
 
+  resources :operation_logs
 end

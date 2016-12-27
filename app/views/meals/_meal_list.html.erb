@@ -1,32 +1,53 @@
-<h3>店名菜品列表</h3>
-<table class="table table-bordered">
-  <tr>
-    <td>菜名</td><td>单价</td><td>图片</td><td>操作</td>
-  </tr>
-  <%  @meal_types.each do |meal_type|%>
-    <tr>
-      <td colspan="4">
-        <font color="red"><%=meal_type.name%></font>
-        <span class = 'add_meals_type'></span>
-      </td>
-    </tr>
-    <% meal_type.meals.each do |meal| %>
+<ul class="list-group">
+  <li class="list-group-item">
+    <h3>店名菜品列表</h3>
+  </li>
+</ul>
+
+<div class="table-overflow">
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td>
-          <%=meal.name%>
-          <%= render 'evaluations/evaluation', meal: meal %>
-        </td>
-        <td><%=meal.price%>元</td>
-        <td class="w-120">
-            <%= render 'shared/meal_image', meal: meal %>
-            <%= form_for(Meal.new, url: add_attachments_meals_path, html: { enctype: "multipart/form-data"}) do |f| %>
-              <input type="hidden" name="meal_id" value="<%= meal.id %>" >
-              <input required="true" name="attachment" type="file" class="form-control">
-              <button type="submit" class="btn btn-primary">保存图片</button>
-            <%end %>
-        </td>
-        <td><%=link_to '删除', meal_path(meal), method: :DELETE, class:"btn btn-danger", 'data-confirm'=>'是否删除？'%></td>
+        <th>菜名</th><th>单价</th><th>图片</th><th>操作</th>
       </tr>
+    </thead>
+    <tbody>
+    <%  @meal_types.each do |meal_type|%>
+      <tr>
+        <td colspan="4">
+          <font color="red"><%=meal_type.name%></font>
+          <span class = 'add_meals_type'></span>
+          <%= form_for MealType.new, url: change_meal_type_meal_types_path, html: { class: "float-r margin-r-10"} do|f| %>
+            <%= hidden_field_tag :id, meal_type.id %>
+            <%= f.submit '选择此饭馆', class:"btn-success btn" %>
+          <% end %>
+        </td>
+      </tr>
+      <% meal_type.meals.each do |meal| %>
+        <tr>
+          <td>
+            <%=meal.name%>
+            <%= render 'evaluations/evaluation', meal: meal %>
+          </td>
+          <td><%=meal.price%>元</td>
+          <td>
+              <%= render 'shared/meal_image', meal: meal %>
+              <%= form_for(Meal.new, url: add_attachments_meals_path, html: { enctype: "multipart/form-data"}) do |f| %>
+              <input type="hidden" name="meal_id" value="<%= meal.id %>" >
+              <div class="col-sm-12">
+                <div class="col-sm-8">
+                  <input required="true" name="attachment" type="file" class="form-control">
+                </div>
+                <div class="col-sm-4">
+                  <button type="submit" class="btn btn-primary">保存图片</button>
+                </div>
+              </div>
+              <%end %>
+          </td>
+          <td><%=link_to '删除', meal_path(meal), method: :DELETE, class:"btn btn-danger", 'data-confirm'=>"是否删除[#{meal.name}]？"%></td>
+        </tr>
+      <%end%>
     <%end%>
-  <%end%>
-</table>
+    </tbody>
+  </table>
+</div>

@@ -3,8 +3,8 @@
    good = evaluations.select{|e| e.types == "good"}
    common = evaluations.select{|e| e.types == "common"}
    bad = evaluations.select{|e| e.types == "bad"}
-   mine = evaluations.select{|e| e.order_user_id ==  current_order_user.id }.first
-   @is_ordered_meals ||= current_order_user.orders.where(meal: meal.meal_type.meals).distinct
+   mine = evaluations.select{|e| e.user_id ==  current_user.id }.first
+   @is_ordered_meals ||= current_user.orders.where(meal: meal.meal_type.meals).distinct
    is_ordered = @is_ordered_meals.select{|m| m.meal_id == meal.id}
 
 %>

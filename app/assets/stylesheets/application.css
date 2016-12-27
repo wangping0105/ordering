@@ -10,4 +10,24 @@
  *
  *= require_self
  *= require_tree .
+ *= require bootstrap/css/bootstrap.min
  */
+.form-signin {
+    max-width: 400px;
+    padding: 10px;
+    margin: 0 auto;
+}
+
+.form-signin div{
+    margin-bottom: 10px;
+}
+
+.control-label{
+    padding-top: 6px;
+    height: 34px;
+}
+
+.table-overflow{
+    overflow: auto;
+    height: 600px;
+}

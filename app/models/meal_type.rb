@@ -10,4 +10,8 @@ class MealType < ActiveRecord::Base
 
     self.update(status: true)
   end
+
+  def status_mapped
+    status == 1 ? "当前饭馆" : '未选择'
+  end
 end

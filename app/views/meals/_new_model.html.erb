@@ -1,17 +1,19 @@
-<h3>新增菜品</h3>
 <%= form_for Meal.new,html:{class:""} do|f| %>
-  <input type="hidden" name="meal_type_id" value="<%= params[:meal_type_id] %>" />
-  <ul>
-    <li>
-      店名：<%=f.select :mtype, @meal_types.map{|a| [a.name, a.id]} %>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <h3>新增菜品</h3>
+      <input type="hidden" name="meal_type_id" value="<%= params[:meal_type_id] %>" />
     </li>
-    <li>
+    <li class="list-group-item">
+      饭店：<%= @meal_types.map(&:name).first%>
+    </li>
+    <li class="list-group-item">
       菜名：<%=f.text_field :name, required:true %>
     </li>
-    <li>
+    <li class="list-group-item">
       单价：<%=f.text_field :price,value: 0, required:true %>
     </li>
-    <li>
+    <li class="list-group-item">
       <%=f.submit '新增', class:"btn-primary btn" %>
     </li>
   </ul>

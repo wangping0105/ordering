@@ -1,0 +1,45 @@
+<div class="col-sm-12" >
+  <div class="col-md-12">
+    <h2 class="sub-header">操作日志</h2>
+  </div>
+
+  <form action="<%= operation_logs_path %>">
+    <div class="col-md-4">
+      <%= select_tag :query, options_for_select(@all_users, params[:user_id]), class: 'form-control' %>
+    </div>
+
+    <div class="col-md-2">
+      <%=submit_tag '查找', class: 'btn-default btn' %>
+    </div>
+  </form>
+
+  <div class="col-md-12">
+    <hr>
+    <div class="table-responsive" ng-controller="home">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>操作人</th>
+          <th>内容</th>
+          <th>时间</th>
+          <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @operation_logs.each_with_index do |operation_log, i|
+           _loggable =  operation_log.loggable %>
+          <tr>
+            <td><%= i+1 %></td>
+            <td><%= operation_log.user_name %></td>
+            <td><%= "#{operation_log.action_mapped}#{_loggable.try(:model_name_i18n)}[#{_loggable.to_s}]" %></td>
+            <td><%= operation_log.created_at.to_s %></td>
+            <td><%= operation_log.note.to_s %></td>
+          </tr>
+        <%end %>
+        </tbody>
+      </table>
+      <%= paginate @operation_logs %>
+    </div>
+  </div>
+</div>

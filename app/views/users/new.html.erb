@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="col-md-12">
+    <%= custom_form_for(@user , url: add_user_users_path, html:{class: "form-signin", autocomplete: "off"}, method: "post") do |f|%>
+      <%= hidden_field_tag :id, @user.id %>
+      <div class="col-md-12">
+        <h2 class="form-signin-heading"><%= @user.id.present? ? "编辑信息":"新增用户" %></h2>
+      </div>
+
+      <%=f.text_field :phone ,class:"form-control", placeholder:"手机号*", required: "required", readonly: is_readonly(@user) %>
+      <%=f.text_field :truename ,class:"form-control", placeholder:"真实姓名*", required: "required", readonly: is_readonly(@user)%>
+      <%=f.text_field :username ,class:"form-control", placeholder:"昵称"%>
+      <%=f.text_field :email ,class:"form-control", placeholder:"公司邮箱"%>
+
+      <% if @user == current_user %>
+          <%=f.password_field :password ,class:"form-control", placeholder:"不填则不修改密码"%>
+      <%end %>
+      <%unless @user.id.present?%>
+        <div class="col-md-12">
+           新用户密码默认 111111
+        </div>
+      <%end %>
+      <div class="col-md-6">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" id="login">保存</button>
+      </div>
+
+      <%if current_user.admin? %>
+        <div class="col-md-6">
+          <%= link_to '返回', users_path, class: 'btn btn-lg btn-primary btn-block' %>
+        </div>
+      <%end %>
+    <%end %>
+  </div>
+</div>
+
+
+<script>
+  <%= content_for :js_in_footer do%>
+  <%= javascript_tag do %>
+  <%if @user.new_record? %>
+    setTimeout(function(){$("input").val("")}, 1000)
+  <%else %>
+    setTimeout(function(){$("#user_password").val("")}, 1000)
+  <%end %>
+
+  $("#login").on("click", function(e){
+    e.preventDefault(); // 移除掉原生的submit处理
+    var _form = $(this).parents("form")[0]
+    var url =  $(_form).attr("action");
+    var method =  $(_form).attr("method");
+    if(!$(_form).valid()){
+      return;
+    }
+    $(this).attr("disabled", true) //防止重复提交
+    var _this = this
+    $.ajax({
+      url: url,
+      type: method,
+      data: $(_form).serialize(),
+      dataType: "json",
+      success: function(data){
+        handleMessage(data.msg)
+        if(data.code == 0){
+          location.href = data.url
+        }
+      },
+      error: function(){
+        handleMessage("请求失败,工程师正在修理!")
+      },
+      complete: function(){
+        $(_this).removeAttr("disabled")
+      }
+    })
+  });
+  <%end%>
+  <%end%>
+</script>

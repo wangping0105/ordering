@@ -16,21 +16,27 @@
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
+  <% if content_for?(:js_in_header)%>
+    <%= yield(:js_in_head) %>
+  <%end %>
 </head>
 
 <body <%="data-no-turbolink" if request.get? %>>
 
     <div class="mian_body">
-      <%= render 'shared/flash_area' %>
       <%= render 'shared/body_head' %>
+      <%= render 'shared/flash_area' %>
     </div>
     <%= yield %>
     <div style="position: fixed; bottom: 5px;">
       <br>
       <p>
-      贡献者: 超爷,王平
+      作者: 王平
       </p>
     </div>
+  <% if content_for?(:js_in_footer)%>
+    <%= yield(:js_in_footer) %>
+  <%end %>
 </body>
 </html>
 

@@ -1,0 +1,58 @@
+<div class="col-sm-6" >
+  <h2 class="sub-header">个人点餐数排行</h2>
+  <div class="table-responsive" ng-controller="home">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>排行</th>
+        <th>姓名</th>
+        <th>历史份数</th>
+      </tr>
+      </thead>
+      <tbody>
+      <%@user_orders.each_with_index do |user_order, i|  %>
+        <tr>
+          <td><%= (Kaminari.config.default_per_page) * ((params[:page] || 1).to_i - 1) + i+1 %></td>
+          <td><%= user_order.truename %></td>
+          <td><%= user_order.total_count  %></td>
+        </tr>
+      <%end %>
+      <%if @user_orders.blank? %>
+        <tr>
+          <td colspan="3">大家都还没点呢</td>
+        </tr>
+      <%end %>
+      </tbody>
+    </table>
+    <%= paginate @user_orders %>
+  </div>
+</div>
+
+<div class="col-sm-6" >
+  <h2 class="sub-header"><%= @meal_type.name %>的菜品排行</h2>
+  <div class="table-responsive" ng-controller="home">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>排行</th>
+        <th>菜名</th>
+        <th>历史份数</th>
+      </tr>
+      </thead>
+      <tbody>
+      <%@ranking_orders.each_with_index do |order, i|  %>
+        <tr>
+          <td><%= i+1 %></td>
+          <td><%= order.meal.try(:name) %></td>
+          <td><%= order.count  %></td>
+        </tr>
+      <%end %>
+      <%if @ranking_orders.blank? %>
+        <tr>
+          <td colspan="3">这是一家新的饭馆～</td>
+        </tr>
+      <%end %>
+      </tbody>
+    </table>
+  </div>
+</div>

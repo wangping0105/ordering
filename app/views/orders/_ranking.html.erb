@@ -1,0 +1,17 @@
+<div id='ten_ranking' class="alert alert-message alert-info fade in" >
+  <a href="#" class="close" data-dismiss="alert">&times;</a>
+  <p>点餐排行Top3 (详细信息请去排行榜)</p>
+  <ul>
+    <% @user_orders.each_with_index do |user, i| %>
+        <li >
+          <div class="float-l w-200">NO.<%= i+1 %> <%= user.truename%>童鞋</div>
+          <div><%= user.total_count %>份</div>
+        </li>
+    <%end %>
+  </ul>
+</div>
+<script>
+    setTimeout(function () {
+        $("#ten_ranking .close").click();
+    }, 3000);
+</script>

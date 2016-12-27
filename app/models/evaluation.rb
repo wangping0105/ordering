@@ -1,7 +1,8 @@
 class Evaluation < ActiveRecord::Base
-  belongs_to :order_user
+  belongs_to :user
   belongs_to :evaluatable, polymorphic: true
-  enum :types =>{good: 0, common: 1, bad: 2}
+
+  enum types: {good: 0, common: 1, bad: 2}
 
   def types_i18n
     case types

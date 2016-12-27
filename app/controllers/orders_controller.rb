@@ -1,10 +1,11 @@
 #encoding:utf-8
 class OrdersController < ApplicationController
-  #before_filter :authenticate_user!
+  before_action :order_ranking, only: [:index, :new]
   Limit_size = 200
+  USER_LIMIT = 3
 
   def index
-    @orders = Order.includes(:order_user, meal:[:meal_type, :attachments]).current_orders
+    @orders = Order.includes(:user, meal:[:meal_type, :attachments]).current_orders
     @meals = Meal.where(id: @orders.map(&:meal_id).uniq)
     @meal_types = MealType.where(id: @meals.map(&:mtype).uniq).includes(:meals=>[:evaluations, :attachments])
 
@@ -16,10 +17,10 @@ class OrdersController < ApplicationController
   def new
    @shop = Shop.first
    if @shop && @shop.status
-     @orders = current_order_user.orders.includes(:meal).current_orders
+     @orders = current_user.orders.includes(:meal).current_orders
      @meal_types = MealType.useing.includes(:meals => [:meal_type, :attachments, :evaluations])
 
-     @order_histroys = current_order_user.orders.includes(:meal).order("created_at desc").page(params[:page])
+     @order_histroys = current_user.orders.includes(:meal).order("created_at desc").page(params[:page])
    end
   end
 
@@ -42,7 +43,7 @@ class OrdersController < ApplicationController
   end
 
   def paying
-    OrderUser.where(status: 1).update_all(status: 0)
+    User.where(status: 1).update_all(status: 0)
 
     flag = Time.now.to_i
     Order.update_all(Subtotal:flag, status:1 )
@@ -56,7 +57,7 @@ class OrdersController < ApplicationController
        flag=true
        @shop.remember_order_time = Time.now
      else
-       OrderUser.where(status: 1).update_all(status: 0)
+       User.where(status: 1).update_all(status: 0)
        @shop.remember_order_time = nil
      end
      @shop.update_attribute(:status, flag)
@@ -67,9 +68,9 @@ class OrdersController < ApplicationController
   def talk
     content =  params[:content].strip
     if content.present?
-      Talk.create(order_user:current_order_user, content: content, meal_type: MealType.useing.first)
+      Talk.create(user:current_user, content: content, meal_type: MealType.useing.first)
     end
-    @talks = Talk.limit(Limit_size).order("created_at desc").includes(:order_user)
+    @talks = Talk.limit(Limit_size).order("created_at desc").includes(:user)
     @talks = @talks.where(meal_type: MealType.useing.first) if MealType.useing.first
   end
 
@@ -77,9 +78,9 @@ class OrdersController < ApplicationController
     @meal = MealType.useing.first
 
     if @meal
-      @talks = @meal.talks.limit(Limit_size).order("created_at desc").includes(:order_user)
+      @talks = @meal.talks.limit(Limit_size).order("created_at desc").includes(:user)
     else
-      @talks = Talk.limit(Limit_size).order("created_at desc").includes(:order_user)
+      @talks = Talk.limit(Limit_size).order("created_at desc").includes(:user)
     end
   end
 
@@ -91,7 +92,7 @@ class OrdersController < ApplicationController
     if meal
     Order.create({
                   meal_id: meal.id,
-                  user_id: current_order_user.id,
+                  user_id: current_user.id,
                   num: 1
               })
     end
@@ -100,6 +101,11 @@ class OrdersController < ApplicationController
   end
 
   private
+    def order_ranking
+      @user_orders = Order.select("count(*) total_count, user_id, users.truename").where(status: 1).
+        joins(:user).group(:user_id).order("count(*) desc").limit(USER_LIMIT)
+    end
+
     def order_params
       params.require(:order).permit(:meal_id,:user_id,:num)
     end

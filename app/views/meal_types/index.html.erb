@@ -1,0 +1,62 @@
+<div class="mian_body">
+  <div class="div1">
+    <%= render "shared/current_meal_type" %>
+
+    <div id="new_meal_style" class= 'col-md-12'>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <h3>新增饭馆</h3>
+        </li>
+        <li class="list-group-item">
+          <%= form_for MealType.new,html:{class:""} do|f| %>
+            <input type="hidden" name="meal_type_id" value="<%= params[:meal_type_id] %>" />
+            <ul class="my_ul">
+              <li>
+                <%=f.text_field :name, class:"form-control", placeholder: "输入店名", required:true %>
+              </li>
+              <li>
+                <%=f.submit '新增饭馆', class:"btn-primary btn" %>
+              </li>
+            </ul>
+          <%end  %>
+        </li>
+        <li class="list-group-item">
+          <div>
+            <h4>已有饭店：</h4>
+            <table class="table table-striped">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>名称</th>
+                <th>菜品数量</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @meal_types.each_with_index do |mt, i| %>
+                <tr>
+                  <td><%= i+1 %></td>
+                  <td><%=link_to mt.name, meals_path(meal_type_id: mt) %></td>
+                  <td><%= mt.try(:meals_count) %></td>
+                  <td><%= mt.status_mapped %></td>
+                  <td><%= mt.created_at%></td>
+                  <td>
+                    <%= link_to '删除', meal_type_path(mt.id), method: :delete, class:"btn btn-danger", data:{ confirm:"确认删除[#{mt.name}]？" } %>
+                    <%= form_for MealType.new, url: change_meal_type_meal_types_path, html: { class: "float-l margin-r-10"} do|f| %>
+                      <%= hidden_field_tag :id, mt.id %>
+                      <%= f.submit '选择此饭馆', class:"btn-success btn" %>
+                    <% end %>
+                  </td>
+                </tr>
+              <%end %>
+              </tbody>
+            </table>
+            <%= paginate @meal_types%>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
